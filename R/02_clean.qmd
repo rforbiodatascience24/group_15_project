@@ -1,0 +1,36 @@
+---
+title: "02_clean"
+format: html
+editor: visual
+---
+
+## Cleaning of the count matrix
+
+Drop irrelevant columns in the mapping of ensemble to gene symbol
+
+```{r}
+ensemble_to_gene_symbol <- ensemble_to_gene_symbol |>
+  select (c(id, gene)) |>
+  rename(Ensembl_ID=id)
+```
+
+```{r}
+
+count_data <- count_data |>
+  inner_join (ensemble_to_gene_symbol, join_by(Ensembl_ID)) |>
+  select (-c(Ensembl_ID)) |>
+  relocate(gene)
+```
+
+Some genes are repeated in the rows, we need to merge to we have unique number of genes. Reverse transform to be able to merge.
+
+```{r}
+count_data <- count_data |>
+  pivot_longer(cols = -1, names_to = "sample", values_to = "log2_value") |>
+  mutate(count = 2^log2_value - 1) |>
+  group_by(gene, sample)|>
+  summarise(count = sum(count), .groups = "drop") |>
+  pivot_wider(names_from=sample, values_from=count)
+```
+
+Transpose so observations are in the rows and variables are in the columns
