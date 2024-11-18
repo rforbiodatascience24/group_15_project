@@ -9,7 +9,7 @@ library("here")
 
 ## Load files
 
-In this project we are working with two files: One with the counts data, and one with clinical data
+In this project we are working with three files: One with the counts data, and one with clinical data
 
 ```{r}
 count_data = read_tsv(here("_raw/TCGA-LUAD.star_counts.tsv.gz"))
@@ -19,7 +19,15 @@ count_data = read_tsv(here("_raw/TCGA-LUAD.star_counts.tsv.gz"))
 clinical_data = read_tsv(here("_raw/TCGA-LUAD.clinical.tsv.gz"))
 ```
 
+```{r}
+ensemble_to_gene_symbol = read_tsv(here("_raw/gencode.v36.annotation.gtf.gene.probemap"))
+```
+
 ## Save the files into two separate tsv files in the data folder
+
+```{r}
+dir.create(here("data"))
+```
 
 ```{r}
 write_tsv(count_data, here("data/count_data.tsv"))
@@ -27,4 +35,8 @@ write_tsv(count_data, here("data/count_data.tsv"))
 
 ```{r}
 write_tsv(clinical_data, here("data/clinical_data.tsv"))
+```
+
+```{r}
+write_tsv(ensemble_to_gene_symbol, here("data/ensemble_to_gene_symbol.tsv"))
 ```
