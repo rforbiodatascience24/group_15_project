@@ -30,13 +30,13 @@ dir.create(here("data"))
 ```
 
 ```{r}
-write_tsv(count_data, here("data/count_data.tsv"))
+write_tsv(count_data, here("data/01_count_data_load.tsv"))
 ```
 
 ```{r}
-write_tsv(clinical_data, here("data/clinical_data.tsv"))
+write_tsv(clinical_data, here("data/01_clinical_data_load.tsv"))
 ```
 
 ```{r}
-write_tsv(ensemble_to_gene_symbol, here("data/ensemble_to_gene_symbol.tsv"))
+write_tsv(ensemble_to_gene_symbol, here("data/01_ensemble_to_gene_symbol_load.tsv"))
 ```

@@ -11,11 +11,10 @@ Drop irrelevant columns in the mapping of ensemble to gene symbol
 ```{r}
 ensemble_to_gene_symbol <- ensemble_to_gene_symbol |>
   select (c(id, gene)) |>
-  rename(Ensembl_ID=id)
+  rename(Ensembl_ID = id)
 ```
 
 ```{r}
-
 count_data <- count_data |>
   inner_join (ensemble_to_gene_symbol, join_by(Ensembl_ID)) |>
   select (-c(Ensembl_ID)) |>
@@ -33,4 +32,51 @@ count_data <- count_data |>
   pivot_wider(names_from=sample, values_from=count)
 ```
 
-Transpose so observations are in the rows and variables are in the columns
+Transpose so observations are in the rows and variables are in the columns (tidy data).
+
+```{r}
+count_data <- count_data |>
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "count") |>
+  mutate(count = round(count)) |>
+  pivot_wider(names_from = gene, values_from = count)
+```
+
+Pre-filter low count genes before running the DESeq2 functions (genes in the rows). (<https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering>).
+
+## Cleaning of the clinical data
+
+Removing columns with redundant/ unnecessary information. We are also removing columns - "days_to_diagnosis.diagnoses", "last_known_disease_status.diagnoses", "alcohol_history.exposures"...
+
+```{r}
+clinical_data_clean <- clinical_data |>
+  select(-c(id, case_id, project_id.project, tissue_source_site_id.tissue_source_site, project.tissue_source_site, bcr_id.tissue_source_site, days_to_diagnosis.diagnoses, last_known_disease_status.diagnoses, alcohol_history.exposures, name.program.project, name.project, classification_of_tumor.diagnoses, tumor_grade.diagnoses, progression_or_recurrence.diagnoses, treatment_id.treatments.diagnoses, submitter_id.treatments.diagnoses, created_datetime.treatments.diagnoses, updated_datetime.treatments.diagnoses, sample_id.samples, composition.samples, pathology_report_uuid.samples, specimen_type.samples))
+```
+
+Removing columns with many NAs/ not reported.
+
+```{r}
+clinical_data_clean <- clinical_data_clean |>
+  select(where(~ sum(is.na(.)) <= 2/3*nrow(clinical_data_clean)))
+```
+
+```{r}
+clinical_data_clean <- clinical_data_clean |>
+  filter(tissue_type.samples == "Tumor")
+```
+
+Filtering count matrix so that it only contains the same samples as in clinical_data_clean ("Tumor" samples).
+
+```{r}
+count_data_clean <- count_data |>
+  semi_join(clinical_data_clean, by = "sample")
+```
+
+## Save the files into two separate tsv files in the data folder
+
+```{r}
+write_tsv(count_data_clean, here("data/02_count_data_clean.tsv"))
+```
+
+```{r}
+write_tsv(clinical_data_clean, here("data/02_clinical_data_clean.tsv"))
+```
