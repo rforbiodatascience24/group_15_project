@@ -1,0 +1,29 @@
+---
+title: "03_augment"
+format: html
+editor: visual
+---
+
+## Add new variables
+
+```{r}
+clinical_data_augment <- clinical_data_clean |>
+  mutate(smoker_groups = case_when(pack_years_smoked.exposures < 20 ~ "light",pack_years_smoked.exposures >= 20 & pack_years_smoked.exposures < 40 ~ "medium", pack_years_smoked.exposures >= 40 ~ "heavy",is.na(pack_years_smoked.exposures) ~ "No information" ))
+```
+
+```{r}
+clinical_data_augment <- clinical_data_augment |>
+  mutate(smoker_groups = factor(smoker_groups,
+                            levels =  c("No information", "light",
+                                        "medium", "heavy")))
+```
+
+```{r}
+sample_table <- clinical_data_augment |> 
+  select(sample, smoker_groups)
+```
+
+```{r}
+sample_table <- sample_table |>
+  semi_join(count_data_clean, by = "sample")
+```
