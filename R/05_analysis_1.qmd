@@ -39,42 +39,51 @@ resultsNames(dds) # lists the coefficients
 ```
 
 ```{r}
-res <- results(dds, contrast = list(c("smoker_groups_heavy_vs_light", "smoker_groups_medium_vs_light")))
+res <- results(dds, contrast = list(c("smoker_groups_heavy_vs_light", "smoker_groups_medium_vs_light")), alpha=0.05)
 # or to shrink log fold changes association with condition:
-#res <- lfcShrink(dds, coef="condition_smoker", type="apeglm")
+
+summary(res)
 ```
 
-```{r}
-res05 <-results(dds,alpha=0.05)
-summary(res05)
-```
-
-Convert results from DESeq to a tidy dataframe
+Convert results from DESeq to a tidy dataframe, select "gene", "log2FoldChange" and "pvalue" columns.
 
 ```{r}
-res05_tidy <- res05 |>
-  as_tibble(rownames = "gene")
+genes <- c("EGFR", "KRAS", "SPINK1", "SPP1")
+#, "MET", "LKB1", "BRAF", "PIK3CA", "ALK", "RET", "ROS1"
+  
+res_tidy <- res |>
+  as_tibble(rownames = "gene") |>
+  select(gene, log2FoldChange, pvalue, padj)
 
-
-```
-
-```{r}
-res05 |>
-  ggplot(aes(x = estimate, y = -log10(p.value))) +
-  geom_point(aes(colour=factor(is_significant)), alpha=0.5, size=1) +
-  geom_text_repel(
-    data= res05|> filter (is_significant =="yes"), 
+# Add to the plot
+ggplot(res_tidy, aes(x = log2FoldChange, y = -log10(pvalue))) +
+  geom_point(aes(color = ifelse(!is.na(padj) & 
+                                  padj < 0.05 & 
+                                  abs(log2FoldChange) > 2, 
+                                "Significant", "Not significant")), 
+                                alpha = 0.8) +
+  labs(title = "Title of the Plot", color = "Significant/ Unsignificant", x = "log2FC", y = "-log10(pvalue)") +
+  geom_point(
+    data = res_tidy |> filter (gene %in% genes), 
+    size=2,
+    color = "black") +
+  geom_label_repel(
+    data = res_tidy |> filter (gene %in% genes), 
     aes(label=gene),
     size=2,
-    color= "turquoise3", 
+    color = "black", 
     max.overlaps=Inf,
-    segment.color="transparent")+
-  geom_hline(yintercept=0, color="black")+
-  labs(x="Los2 Fold Change", y="-log10 Adjusted p-value", title = "Volcano Plot of Differential Gene Expression",subtitle = "Log2 Fold Change vs Adjusted p-value")+
-  theme_minimal() +
-  theme(legend.position = "none", plot.title=element_text(size=12, hjust=1), plot.subtitle=element_text(hjust=1))
+    segment.color="transparent") +
+  theme_minimal()
 ```
 
 ```{r}
-kdjfkajkdsj
+res_tidy |>
+  filter(gene %in% genes)
+```
+
+PCA plotting
+
+```{r}
+
 ```
