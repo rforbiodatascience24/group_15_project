@@ -1,0 +1,92 @@
+## Description of the data
+
+First, we will summarize the clinical data
+
+```{r}
+clinical_data_augment|>
+  summarize()
+```
+
+Count of smokers vs non smokers
+
+Smoker groups
+
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=smoker_groups, fill= smoker_groups)) +
+  geom_bar() +
+  labs(
+    x = "Smoker groups",
+    y = "Count of samples",
+    title = "Samples per smoker group"
+  )
+  
+
+```
+
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=gender.demographic, fill= gender.demographic)) +
+  geom_bar() +
+  labs(
+    x = "Gender",
+    y = "Count of samples",
+    title = "Samples per gender"
+  )
+```
+
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=ajcc_pathologic_stage.diagnoses, fill= ajcc_pathologic_stage.diagnoses)) +
+  geom_bar() +
+  labs(
+    x = "Cancer stage",
+    y = "Count of samples",
+    title = "Samples per cancer stage"
+  )
+```
+
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=age_at_index.demographic, fill= age_at_index.demographic)) +
+  geom_histogram() +
+  labs(
+    x = "Age",
+    y = "Count of samples",
+    title = "Distribution of ages"
+  )
+```
+
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=ajcc_pathologic_stage.diagnoses, y=age_at_index.demographic, fill= ajcc_pathologic_stage.diagnoses)) +
+  geom_boxplot() +
+  labs(
+    x = "Cancer stage",
+    y = "Age",
+    title = "Age distribution by cancer stage"
+  )
+```
+
+Vital status vs age at diagnosis (correlation)
+
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=vital_status.demographic, y=age_at_diagnosis.diagnoses, fill= vital_status.demographic)) +
+  geom_boxplot() +
+  labs(
+    x = "Vital status",
+    y = "Age at diagnosis",
+    title = "..."
+  )
+```
+
+Vital status and prior_malignancy
+
+Vital status and smoker_groups
