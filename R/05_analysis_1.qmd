@@ -4,27 +4,13 @@ format: html
 editor: visual
 ---
 
-DEseq2 analysis
+## DEseq2 analysis
 
 ```{r}
 library(DESeq2)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(ggrepel)
 ```
 
-Step 1: preparing
-
-Making sure the row names in coldata matches to column names in count data
-
-```{r}
-dim(sample_table_DEseq)
-```
-
-```{r}
-all(colnames(count_data_clean_DEseq)%in%rownames(sample_table_DEseq |> column_to_rownames(var = "sample")))
-```
+### Step 1: preparing
 
 ```{r}
 sample_table|>
@@ -35,7 +21,6 @@ dds <- DESeqDataSetFromMatrix(countData = count_data_clean_DEseq_trans,
                               design= ~ smoker_groups)
 dds <- DESeq(dds)
 resultsNames(dds) # lists the coefficients
-
 ```
 
 ```{r}
@@ -48,12 +33,16 @@ summary(res)
 Convert results from DESeq to a tidy dataframe, select "gene", "log2FoldChange" and "pvalue" columns.
 
 ```{r}
-genes <- c("EGFR", "KRAS", "SPINK1", "SPP1")
-#, "MET", "LKB1", "BRAF", "PIK3CA", "ALK", "RET", "ROS1"
-  
 res_tidy <- res |>
   as_tibble(rownames = "gene") |>
   select(gene, log2FoldChange, pvalue, padj)
+```
+
+Plotting the significant up/down regulated genes.
+
+```{r}
+genes <- c("AMBP", "ASCL1", "BARX1", "DIRAS3", "BNC1")
+#, "MET", "LKB1", "BRAF", "PIK3CA", "ALK", "RET", "ROS1"
 
 # Add to the plot
 ggplot(res_tidy, aes(x = log2FoldChange, y = -log10(pvalue))) +
@@ -62,7 +51,7 @@ ggplot(res_tidy, aes(x = log2FoldChange, y = -log10(pvalue))) +
                                   abs(log2FoldChange) > 2, 
                                 "Significant", "Not significant")), 
                                 alpha = 0.8) +
-  labs(title = "Title of the Plot", color = "Significant/ Unsignificant", x = "log2FC", y = "-log10(pvalue)") +
+  labs(title = "Volcano plot for down/up regulated genes with significance < 0.05", color = "Significant/ Unsignificant", x = "log2FC", y = "-log10(pvalue)") +
   geom_point(
     data = res_tidy |> filter (gene %in% genes), 
     size=2,
@@ -75,15 +64,6 @@ ggplot(res_tidy, aes(x = log2FoldChange, y = -log10(pvalue))) +
     max.overlaps=Inf,
     segment.color="transparent") +
   theme_minimal()
-```
 
-```{r}
-res_tidy |>
-  filter(gene %in% genes)
-```
-
-PCA plotting
-
-```{r}
-
+ggsave(here("results/05_volcano_plot.png"), plot= last_plot())
 ```
