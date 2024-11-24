@@ -88,6 +88,27 @@ clinical_data_clean <- clinical_data_clean |>
 
 ```
 
+```{r}
+count_data_clean <- count_data_clean |>
+  semi_join(clinical_data_clean, by = "sample")
+```
+
+```{r}
+clinical_data_clean_DEseq <- clinical_data_clean |> 
+  filter(!is.na(pack_years_smoked.exposures))
+count_data_clean_DEseq <- count_data_clean |>
+  semi_join(clinical_data_clean_DEseq, by = "sample")
+```
+
+Transpose count data matrix to fit DEseq2 format: genes as rows and samples as columns
+
+```{r}
+count_data_clean_DEseq_trans <- count_data_clean_DEseq |>
+  pivot_longer(cols = -sample, names_to = "gene", values_to = "count") |>
+  pivot_wider(names_from = sample, values_from = count)|>
+  column_to_rownames(var = "gene")
+```
+
 ## Save the files into two separate tsv files in the data folder
 
 ```{r}

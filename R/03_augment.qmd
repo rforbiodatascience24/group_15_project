@@ -27,3 +27,13 @@ sample_table <- clinical_data_augment |>
 sample_table <- sample_table |>
   semi_join(count_data_clean, by = "sample")
 ```
+
+Filtaring out from sample_table samples with "no information" for DEseq2 analysis
+
+```{r}
+sample_table_DEseq <- sample_table |>
+  filter(smoker_groups!="No information")
+```
+
+```         
+```
