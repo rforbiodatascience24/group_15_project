@@ -1,0 +1,41 @@
+---
+title: "05_Analysis_01"
+format: html
+editor: visual
+---
+
+DEseq2 analysis
+
+```{r}
+library(DESeq2)
+```
+
+Step 1: preparing
+
+Making sure the row names in coldata matches to column names in count data
+
+```{r}
+dim(sample_table_DEseq)
+```
+
+```{r}
+all(colnames(count_data_clean_DEseq)%in%rownames(sample_table_DEseq |> column_to_rownames(var = "sample")))
+```
+
+```{r}
+sample_table|>
+  mutate(smoker_groups=factor(smoker_groups))
+
+dds <- DESeqDataSetFromMatrix(countData = count_data_clean_DEseq_trans,
+                              colData = sample_table_DEseq,
+                              design= ~ smoker_groups)
+dds <- DESeq(dds)
+resultsNames(dds) # lists the coefficients
+
+```
+
+```{r}
+res <- results(dds, contrast = list(c("smoker_groups_heavy_vs_light", "smoker_groups_medium_vs_light")))
+# or to shrink log fold changes association with condition:
+#res <- lfcShrink(dds, coef="condition_smoker", type="apeglm")
+```
