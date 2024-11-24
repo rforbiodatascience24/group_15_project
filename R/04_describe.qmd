@@ -1,15 +1,102 @@
 ## Description of the data
 
-First, we will summarize the clinical data
+This section is divided into two subsections: one describing the clinical data and one describing the count data.
+
+### Clinical data
+
+First, we extract the counts for some variables in the dataset
+
+For the gender variable in our dataset:
 
 ```{r}
-clinical_data_augment|>
-  summarize()
+clinical_data_augment |> 
+  count(gender.demographic) |> 
+  mutate(percentage = n *100/ sum(n))
 ```
 
-Count of smokers vs non smokers
+As it can be seen, the dataset is quite balanced in this variable, with almost the same name of samples in terms of gender.
 
-Smoker groups
+For the variable displaying the race of the patients from each sample:
+
+```{r}
+clinical_data_augment |> 
+  count(race.demographic) |> 
+  mutate(percentage = n *100 / sum(n))
+```
+
+It can be observed that the dataset is quite unbalanced in terms of race, as the vast majority of the samples (89%) come from white people.
+
+For the cancer stages, we can observe in the table below that most of the samples come from patients of stage I (\~ 60%) between IA and IB.
+
+```{r}
+clinical_data_augment |> 
+  count(ajcc_pathologic_stage.diagnoses) |>
+  mutate(percentage = n*100 / sum(n))
+```
+
+For the age, as it is a numerical value we can calculate its mean, median, and standard deviation:
+
+```{r}
+clinical_data_augment |> 
+  summarise(
+    mean_age = mean(age_at_index.demographic, na.rm = TRUE), 
+    median_age = median(age_at_index.demographic, na.rm = TRUE),
+    sd_age = sd(age_at_index.demographic, na.rm = TRUE)
+)
+```
+
+After calculating these descriptive statistics related to the age we observe a mean of 66.7 years old, a median of 68 years old and a standard deviation of 9.5 years.
+
+We can also print the amount of samples from each of the smoker groups:
+
+```{r}
+clinical_data_augment |> 
+  count(smoker_groups) |>
+  mutate(percentage = n * 100/ sum(n))
+```
+
+46% of the samples in the dataset do not provide any meaningful information. The most predominant smoker group is the heavy smoker ( \>= 40 pack years smoked) with a \~33%.
+
+We can extract the average age by smoker group:
+
+```{r}
+clinical_data_augment |>
+  group_by(smoker_groups) |>
+  summarize(mean_age = mean(age_at_index.demographic, na.rm = TRUE))
+
+```
+
+As it can be observed in the table above, the patients from the light smokers group have a lower mean age (61.57%) than the rest of the groups.
+
+And the percentage of women and men alive and deceased:
+
+```{r}
+clinical_data_augment |>
+  count(gender.demographic, vital_status.demographic) |>
+  group_by(gender.demographic) |>
+  mutate(percentage = n*100 / sum(n)) |>
+  ungroup()
+```
+
+From this table we can observe that the majority of patients whose sample are in the study are still alive. This difference is especially predominant in women, where 77% of the samples are from patients who are still alive at the time of the study.
+
+For each gender, we can also extract the number of samples corresponding to each cancer stage:
+
+```{r}
+clinical_data_augment |>
+  count(gender.demographic, ajcc_pathologic_stage.diagnoses) |>
+  spread(ajcc_pathologic_stage.diagnoses, n, fill = 0)
+```
+
+As it can be seen, the samples are quite distributed among men and women, except for in Stage IV cancer, where all the samples except for 1 come from men.
+
+Once we have displayed some counts for the relevant variables, we move on to plotting for a clearer visualization:
+
+First, we will create the results folder if it has not been created. Here we will store the plots:
+
+```{r}
+dir.create(here("results"))
+```
 
 ```{r}
 clinical_data_augment |>
@@ -19,10 +106,14 @@ clinical_data_augment |>
   labs(
     x = "Smoker groups",
     y = "Count of samples",
-    title = "Samples per smoker group"
+    title = "Samples per smoker group",
+    fill="Smoker groups"
   )
   
+```
 
+```{r}
+ggsave(here("results/04_samples_per_smoker_group.png"), plot= last_plot() )
 ```
 
 ```{r}
@@ -33,8 +124,13 @@ clinical_data_augment |>
   labs(
     x = "Gender",
     y = "Count of samples",
-    title = "Samples per gender"
+    title = "Samples per gender",
+    fill="Gender"
   )
+```
+
+```{r}
+ggsave(here("results/04_samples_per_gender.png"), plot= last_plot() )
 ```
 
 ```{r}
@@ -45,20 +141,29 @@ clinical_data_augment |>
   labs(
     x = "Cancer stage",
     y = "Count of samples",
-    title = "Samples per cancer stage"
+    title = "Samples per cancer stage",
+    fill= "Cancer stage"
   )
+```
+
+```{r}
+ggsave(here("results/04_samples_cancer_stage.png"), plot= last_plot() )
 ```
 
 ```{r}
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=age_at_index.demographic, fill= age_at_index.demographic)) +
-  geom_histogram() +
+    mapping=aes(x=age_at_index.demographic)) +
+  geom_histogram(binwidth = 3, fill = "lightblue", color = "black") +
   labs(
     x = "Age",
     y = "Count of samples",
     title = "Distribution of ages"
   )
+```
+
+```{r}
+ggsave(here("results/04_age_histogram.png"), plot= last_plot() )
 ```
 
 ```{r}
@@ -73,12 +178,12 @@ clinical_data_augment |>
   )
 ```
 
-Vital status vs age at diagnosis (correlation)
+Vital status vs age at diagnosis
 
 ```{r}
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=vital_status.demographic, y=age_at_diagnosis.diagnoses, fill= vital_status.demographic)) +
+    mapping=aes(x=vital_status.demographic, y=age_at_index.demographic/365, fill= vital_status.demographic)) +
   geom_boxplot() +
   labs(
     x = "Vital status",
@@ -87,6 +192,98 @@ clinical_data_augment |>
   )
 ```
 
-Vital status and prior_malignancy
+Cancer stage across smoker groups (stacked bar chart)
 
-Vital status and smoker_groups
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=ajcc_pathologic_stage.diagnoses, fill= smoker_groups)) +
+  geom_bar(position="fill") +
+  labs(
+    x = "Cancer stage",
+    y="Proportion of smoker group",
+    title = "Smoker groups within each cancer stage"
+  )
+```
+
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=smoker_groups, fill=ajcc_pathologic_stage.diagnoses)) +
+  geom_bar(position="fill") +
+  labs(
+    x = "Smoker group",
+    y="Proportion of cancer stages",
+    title = "Cancer stage within each smoker group"
+  )
+```
+
+cancer stage and gender:
+
+```{r}
+clinical_data_augment |>
+  ggplot(
+    mapping=aes(x=ajcc_pathologic_stage.diagnoses, fill= gender.demographic)) +
+  geom_bar(position="fill") +
+  labs(
+    x = "Cancer stage",
+    y="Gender",
+    title = "Gender distribution within cancer stages"
+  )
+```
+
+```{r}
+clinical_data_augment |> 
+  ggplot(
+    aes(x= age_at_index.demographic,
+        fill= ajcc_pathologic_stage.diagnoses)) +
+      geom_histogram(binwidth=15,position="dodge") +
+      facet_wrap(~gender.demographic) +
+      labs(title="Age distribution by cancer stage, faceted by gender")
+```
+
+```{r}
+clinical_data_augment |>
+  group_by(race.demographic) |>
+  filter(n() >= 2) |> #here we keep only the races with more than 2 samples for a clearer representation
+  ungroup() |>
+  ggplot(aes(x = race.demographic, y = age_at_index.demographic, fill = race.demographic)) +
+  geom_violin() +
+  labs(title = "Age at Diagnosis by Race", x = "Race", y = "Age at Diagnosis")
+
+```
+
+```{r}
+clinical_data_augment |>
+  ggplot(aes(x = gender.demographic, y = age_at_index.demographic, fill = gender.demographic)) +
+  geom_violin() +
+  labs(title = "Age at Diagnosis by gender", x = "gender", y = "Age at Diagnosis")
+```
+
+### Count data
+
+Histogram displaying the frequency of the genes across the samples
+
+```{r}
+# Convert the data into a long format for tidyverse operations
+gene_presence <- count_data_clean |>
+  pivot_longer(
+    cols = -1, # Exclude the first column (samples)
+    names_to = "gene",
+    values_to = "count"
+  ) |>
+  filter(count > 0) |>
+  group_by(gene) |>
+  summarize(samples_present = n(), .groups = "drop")
+```
+
+```{r}
+gene_presence |>
+  ggplot(aes(x = samples_present)) +
+  geom_histogram(binwidth = 50) +
+  labs(
+    title = "Distribution of Gene Presence Across Samples",
+    x = "Number of Samples a Gene is Present In",
+    y = "Frequency of Genes"
+  ) 
+```
