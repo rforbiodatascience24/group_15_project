@@ -108,7 +108,7 @@ clinical_data_augment |>
   geom_bar() +
   labs(
     x = "Smoker groups",
-    y = "Count of samples",
+    y = "Count of samples (n)",
     title = "Samples per smoker group",
     fill="Smoker groups"
   )
@@ -129,7 +129,7 @@ clinical_data_augment |>
   geom_bar() +
   labs(
     x = "Gender",
-    y = "Count of samples",
+    y = "Count of samples(n)",
     title = "Samples per gender",
     fill="Gender"
   )
@@ -149,7 +149,7 @@ clinical_data_augment |>
   geom_bar() +
   labs(
     x = "Cancer stage",
-    y = "Count of samples",
+    y = "Count of samples (n)",
     title = "Samples per cancer stage",
     fill= "Cancer stage"
   )
@@ -168,8 +168,8 @@ clinical_data_augment |>
   geom_histogram(binwidth = 3, 
                  fill = "lightblue", color = "black") +
   labs(
-    x = "Age",
-    y = "Count of samples",
+    x = "Age (years)",
+    y = "Count of samples (n)",
     title = "Distribution of ages"
   )
 ```
@@ -189,7 +189,7 @@ clinical_data_augment |>
   geom_boxplot() +
   labs(
     x = "Cancer stage",
-    y = "Age",
+    y = "Age (years)",
     title = "Age distribution by cancer stage",
     fill="Cancer stage"
   )
@@ -210,7 +210,7 @@ clinical_data_augment |>
   geom_boxplot() +
   labs(
     x = "Vital status",
-    y = "Age at diagnosis",
+    y = "Age at diagnosis (years)",
     title = "Vital status vs age at diagnosis",
     fill= "Vital status"
   )
@@ -294,8 +294,8 @@ clinical_data_augment |>
       facet_wrap(~gender.demographic) +
       labs(title="Age distribution by cancer stage faceted by gender",
            fill= "Cancer stage",
-           x= "Age",
-           y= "Sample count")
+           x= "Age (years)",
+           y= "Sample count (n)")
 
 ```
 
@@ -316,7 +316,7 @@ clinical_data_augment |>
   geom_violin() +
   labs(title = "Age at diagnosis by race", 
        x = "Race", 
-       y = "Age at diagnosis",
+       y = "Age at diagnosis (years)",
        fill="Race")
 
 
@@ -336,7 +336,7 @@ clinical_data_augment |>
   geom_violin() +
   labs(title = "Age at diagnosis by gender", 
        x = "Gender", 
-       y = "Age at Diagnosis",
+       y = "Age at Diagnosis (years)",
        fill="Gender")
 ```
 
@@ -371,7 +371,7 @@ gene_presence |>
                  color = "black") +
   labs(
     title = "Distribution of gene presence",
-    x = "Number of samples a gene is present in",
+    x = "Number of samples a gene is present in (n)",
     y = "Frequency of genes"
   ) 
 ```
