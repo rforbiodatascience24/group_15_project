@@ -8,6 +8,10 @@ DEseq2 analysis
 
 ```{r}
 library(DESeq2)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
 ```
 
 Step 1: preparing
@@ -38,4 +42,35 @@ resultsNames(dds) # lists the coefficients
 res <- results(dds, contrast = list(c("smoker_groups_heavy_vs_light", "smoker_groups_medium_vs_light")))
 # or to shrink log fold changes association with condition:
 #res <- lfcShrink(dds, coef="condition_smoker", type="apeglm")
+```
+
+```{r}
+res05 <-results(dds,alpha=0.05)
+summary(res05)
+```
+
+Convert results from DESeq to a tidy dataframe
+
+```{r}
+res05_tidy <- res05 |>
+  as_tibble(rownames = "gene")
+
+
+```
+
+```{r}
+res05 |>
+  ggplot(aes(x = estimate, y = -log10(p.value))) +
+  geom_point(aes(colour=factor(is_significant)), alpha=0.5, size=1) +
+  geom_text_repel(
+    data= res05|> filter (is_significant =="yes"), 
+    aes(label=gene),
+    size=2,
+    color= "turquoise3", 
+    max.overlaps=Inf,
+    segment.color="transparent")+
+  geom_hline(yintercept=0, color="black")+
+  labs(x="Los2 Fold Change", y="-log10 Adjusted p-value", title = "Volcano Plot of Differential Gene Expression",subtitle = "Log2 Fold Change vs Adjusted p-value")+
+  theme_minimal() +
+  theme(legend.position = "none", plot.title=element_text(size=12, hjust=1), plot.subtitle=element_text(hjust=1))
 ```
