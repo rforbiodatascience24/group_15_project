@@ -7,33 +7,57 @@ editor: visual
 ## Add new variables
 
 ```{r}
+# Augment the clinical data with new variables
 clinical_data_augment <- clinical_data_clean |>
-  mutate(smoker_groups = case_when(pack_years_smoked.exposures < 20 ~ "light",pack_years_smoked.exposures >= 20 & pack_years_smoked.exposures < 40 ~ "medium", pack_years_smoked.exposures >= 40 ~ "heavy",is.na(pack_years_smoked.exposures) ~ "No information" ))
+  mutate(
+    smoker_groups = case_when(
+      pack_years_smoked.exposures < 20 ~ "light",
+      pack_years_smoked.exposures >= 20 & 
+        pack_years_smoked.exposures < 40 ~ "medium", 
+      pack_years_smoked.exposures >= 40 ~ "heavy",
+      is.na(pack_years_smoked.exposures) ~ "No information" 
+      )
+    )
 ```
 
 ```{r}
+# Convert smoker groups to a factor with specified levels
 clinical_data_augment <- clinical_data_augment |>
-  mutate(smoker_groups = factor(smoker_groups,
-                            levels =  c("No information", "light",
-                                        "medium", "heavy")))
+  mutate(
+    smoker_groups = factor(
+      smoker_groups,
+      levels =  c(
+        "No information", 
+        "light",
+        "medium", 
+        "heavy"
+        )
+      )
+    )
 ```
 
 ```{r}
+# Create the sample table
 sample_table <- clinical_data_augment |> 
-  select(sample, smoker_groups)
+  select(
+    sample,
+    smoker_groups
+    )
 ```
 
 ```{r}
+# Filter the sample table to match count data
 sample_table <- sample_table |>
-  semi_join(count_data_clean, by = "sample")
+  semi_join(
+    count_data_clean, 
+    by = "sample"
+    )
 ```
-
-Filtaring out from sample_table samples with "no information" for DEseq2 analysis
 
 ```{r}
+# Filter out samples with "No information" for DESeq2 analysis
 sample_table_DEseq <- sample_table |>
-  filter(smoker_groups!="No information")
-```
-
-```         
+  filter(
+    smoker_groups != "No information"
+    )
 ```
