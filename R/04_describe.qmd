@@ -1,42 +1,62 @@
-## Description of the data
+---
+title: "04_describe"
+format: html
+editor: visual
+---
+
+# Description of the data
+
+## Clinical data
+
+### Gender Distribution
 
 This section is divided into two subsections: one describing the clinical data and one describing the count data.
-
-### Clinical data
 
 First, we extract the counts for some variables in the dataset
 
 For the gender variable in our dataset:
 
 ```{r}
+
 clinical_data_augment |> 
   count(gender.demographic) |> 
-  mutate(percentage = n *100/ sum(n))
+  mutate(
+    percentage = n * 100/ sum(n)
+    )
 ```
 
-As it can be seen, the dataset is quite balanced in this variable, with almost the same name of samples in terms of gender.
+The dataset is balanced in terms of gender, with nearly equal representation of male and female samples.
 
-For the variable displaying the race of the patients from each sample:
+## Race Distribution
 
 ```{r}
+
 clinical_data_augment |> 
   count(race.demographic) |> 
-  mutate(percentage = n *100 / sum(n))
+  mutate(
+    percentage = n * 100 / sum(n)
+    )
 ```
 
-It can be observed that the dataset is quite unbalanced in terms of race, as the vast majority of the samples (89%) come from white people.
+The dataset is unbalanced regarding race, with 89% of samples from white patients.
 
-For the cancer stages, we can observe in the table below that most of the samples come from patients of stage I (\~ 60%) between IA and IB.
+## Cancer Stage Distribution 
 
 ```{r}
+
 clinical_data_augment |> 
   count(ajcc_pathologic_stage.diagnoses) |>
-  mutate(percentage = n*100 / sum(n))
+  mutate(
+    percentage = n * 100 / sum(n)
+    )
 ```
 
-For the age, as it is a numerical value we can calculate its mean, median, and standard deviation:
+Most samples (\~60%) come from patients in Stage I (IA and IB).
+
+## Age Statistics
 
 ```{r}
+
 clinical_data_augment |> 
   summarise(
     mean_age = mean(age_at_index.demographic, na.rm = TRUE), 
@@ -45,58 +65,70 @@ clinical_data_augment |>
 )
 ```
 
-After calculating these descriptive statistics related to the age we observe a mean of 66.7 years old, a median of 68 years old and a standard deviation of 9.5 years.
+Mean age: 66.7 years.
 
-We can also print the amount of samples from each of the smoker groups:
+Median age: 68 years.
+
+Standard deviation: 9.5 years.
+
+## Smoker Group Distribution
 
 ```{r}
+
 clinical_data_augment |> 
   count(smoker_groups) |>
-  mutate(percentage = n * 100/ sum(n))
+  mutate(
+    percentage = n * 100 / sum(n)
+    )
 ```
 
-46% of the samples in the dataset do not provide any meaningful information. The most predominant smoker group is the heavy smoker ( \>= 40 pack years smoked) with a \~33%.
+46% of the dataset lacks smoking information
 
-We can extract the average age by smoker group:
+Heavy smokers (\>= 40 pack-years) make up \~33% of the samples.
+
+## **Average Age by Smoker Group**
 
 ```{r}
 clinical_data_augment |>
   group_by(smoker_groups) |>
-  summarize(mean_age = mean(age_at_index.demographic, 
-                            na.rm = TRUE))
+  summarize(
+    mean_age = mean(age_at_index.demographic, na.rm = TRUE)
+    )
 
 ```
 
-As it can be observed in the table above, the patients from the light smokers group have a lower mean age (61.57%) than the rest of the groups.
+As observed in the table above, the patients from the light smokers group have a lower mean age (61.57 years) compared to the rest of the groups.
 
-And the percentage of women and men alive and deceased:
+## **Percentage of Alive and Deceased by Gender**
 
 ```{r}
 clinical_data_augment |>
   count(gender.demographic, vital_status.demographic) |>
   group_by(gender.demographic) |>
-  mutate(percentage = n*100 / sum(n)) |>
+  mutate(
+    percentage = n * 100 / sum(n)
+    ) |>
   ungroup()
 ```
 
-From this table we can observe that the majority of patients whose sample are in the study are still alive. This difference is especially predominant in women, where 77% of the samples are from patients who are still alive at the time of the study.
+The table shows that the majority of patients in the study are still alive. This trend is particularly notable among women, where **77% of the samples** represent patients who are alive at the time of the study.
 
-For each gender, we can also extract the number of samples corresponding to each cancer stage:
+## **Cancer Stage Distribution by Gender**
 
 ```{r}
 clinical_data_augment |>
-  count(gender.demographic, 
-        ajcc_pathologic_stage.diagnoses) |>
+  count(gender.demographic, ajcc_pathologic_stage.diagnoses) |>
   spread(ajcc_pathologic_stage.diagnoses, n, fill = 0)
 ```
 
-As it can be seen, the samples are quite distributed among men and women, except for in Stage IV cancer, where all the samples except for 1 come from men.
+The samples are fairly distributed between men and women across most stages, except for Stage IV, where all but one sample comes from men.
 
 Once we have displayed some counts for the relevant variables, we move on to plotting for a clearer visualization:
 
 First, we will create the results folder if it has not been created. Here we will store the plots:
 
 ```{r}
+
 dir.create(here("results"))
 ```
 
