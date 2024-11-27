@@ -10,8 +10,8 @@ Drop irrelevant columns in the mapping of ensemble to gene symbol
 
 ```{r}
 ensemble_to_gene_symbol <- ensemble_to_gene_symbol |>
-  select (c(id, gene)) |>
-  rename(Ensembl_ID = id)
+  rename("id"="Ensembl_ID")|>
+  select(c(gene, Ensembl_ID))
 ```
 
 ```{r}
@@ -73,14 +73,7 @@ count_data_clean <- count_data |>
 
 ## Data subset
 
-In order to avoid batch effects in our differential gene expression analysis, we explored the source sites for the samples:
-
-```{r}
-clinical_data_clean |> 
-  count(name.tissue_source_site)
-```
-
-And decided to keep only those samples from International Genomics Consortium, the site with the highest number of samples
+In order to avoid batch effects in our differential gene expression analysis, we decided to keep only those samples from International Genomics Consortium, the site with the highest number of samples
 
 ```{r}
 clinical_data_clean <- clinical_data_clean |> 
