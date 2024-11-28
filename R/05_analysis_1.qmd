@@ -17,7 +17,7 @@ library("tidyverse")
 library("ggrepel")
 ```
 
-### Step 1: preparing data for analysis
+### Step 1: Preparing data for analysis and running DESeq2 pipeline
 
 ```{r}
 
@@ -34,10 +34,18 @@ dds <- DESeqDataSetFromMatrix(
   design= ~ smoker_groups
 )
 
+# Runs DESeq2 pipeline
 
 dds <- DESeq(dds)
-resultsNames(dds) # lists the coefficients
+
+# Lists the coefficients
+
+resultsNames(dds) 
 ```
+
+### Step 2: Results Extraction
+
+Results derived from DESeq analysis are extracted specifying the groups to be compared and the level of significance.
 
 ```{r}
 
@@ -61,7 +69,7 @@ res_tidy <- res |>
   select(gene, log2FoldChange, pvalue, padj)
 ```
 
-Plotting the significant up/down regulated genes.
+### Step 3: Plotting the significant up/down regulated genes.
 
 ```{r}
 
@@ -105,15 +113,18 @@ ggsave(
   plot= last_plot())
 ```
 
-Extract significant differently express genes
+### Step 4: Extracting Relevant Information
+
+1. Extracting significant differently express genes: genes with values of log2FoldChange greater than 2 and p-value (padj) below 0.05 are extrated and tidied into a data frame
 
 ```{r}
+
 significant_genes <- res_tidy |>
   filter(padj<0.05 & abs(log2FoldChange)>2) |>
   select(gene)
 ```
 
-Extract normalized counts
+2. Extracting normalized counts: normalization accounts for sequencing depth, library size
 
 ```{r}
 
