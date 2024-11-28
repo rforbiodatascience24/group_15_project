@@ -4,17 +4,23 @@ format: html
 editor: visual
 ---
 
-## PCA plot
+## PCA analysis
 
-move to augment if it works
+Get the genes that are highly differentially expressed in DESeq (padj\<0.05 & abs(log2FoldChange)\>2) and do a PCA analysis to reduce the complexity of the data and allow for an easier visualization.
+
+Our point is to see if there were any other variables that could've been added to our DGE analysis, and help guide those who are trying to improve our results. For that, we chose some variables which we think could cause confounding effects.
+
+The analysis steps were gathered from here: <https://clauswilke.com/blog/2020/09/07/pca-tidyverse-style/>
 
 ```{r}
-sample_table_DEseq_2 <- sample_table_DEseq |>
+sample_table_DEseq <- sample_table_DEseq |>
   left_join(
     clinical_data_augment |>
       select(sample, race.demographic, gender.demographic, ajcc_pathologic_stage.diagnoses, vital_status.demographic, tissue_or_organ_of_origin.diagnoses, ajcc_pathologic_m.diagnoses),
     by="sample")
 ```
+
+Fit the PCA
 
 ```{r}
 pca_fit <- normalized_counts_flipped |>
@@ -25,6 +31,8 @@ pca_fit <- normalized_counts_flipped |>
 
 ```
 
+Calculate variance explained of each of the PCs
+
 ```{r}
 variance_explained <- summary(pca_fit)$importance[2, ] * 100  
 pc1_var <- round(variance_explained[1], 2)  
@@ -32,9 +40,11 @@ pc2_var <- round(variance_explained[2], 2)
 
 ```
 
+Plot the biplots
+
 ```{r}
 pca_fit |> 
-  augment(sample_table_DEseq_2[match(rownames(normalized_counts_flipped), sample_table_DEseq[[1]]), ]) |> 
+  augment(sample_table_DEseq[match(rownames(normalized_counts_flipped), sample_table_DEseq[[1]]), ]) |> 
   ggplot(aes(.fittedPC1, .fittedPC2, color = gender.demographic)) +
   geom_point(size=1.5)  +
   labs(
@@ -47,7 +57,7 @@ pca_fit |>
 
 ```{r}
 pca_fit |> 
-  augment(sample_table_DEseq_2[match(rownames(normalized_counts_flipped), sample_table_DEseq[[1]]), ]) |> 
+  augment(sample_table_DEseq[match(rownames(normalized_counts_flipped), sample_table_DEseq[[1]]), ]) |> 
   ggplot(aes(.fittedPC1, .fittedPC2, color = race.demographic)) +
   geom_point(size=1.5)  +
   labs(
@@ -60,7 +70,7 @@ pca_fit |>
 
 ```{r}
 pca_fit |> 
-  augment(sample_table_DEseq_2[match(rownames(normalized_counts_flipped), sample_table_DEseq[[1]]), ]) |> 
+  augment(sample_table_DEseq[match(rownames(normalized_counts_flipped), sample_table_DEseq[[1]]), ]) |> 
   ggplot(aes(.fittedPC1, .fittedPC2, color = ajcc_pathologic_stage.diagnoses)) +
   geom_point(size=1.5)  +
   labs(
@@ -73,7 +83,7 @@ pca_fit |>
 
 ```{r}
 pca_fit |> 
-  augment(sample_table_DEseq_2[match(rownames(normalized_counts_flipped), sample_table_DEseq[[1]]), ]) |> 
+  augment(sample_table_DEseq[match(rownames(normalized_counts_flipped), sample_table_DEseq[[1]]), ]) |> 
   ggplot(aes(.fittedPC1, .fittedPC2, color = ajcc_pathologic_m.diagnoses)) +
   geom_point(size=1.5)  +
   labs(
@@ -83,3 +93,5 @@ pca_fit |>
   ) +
   theme_minimal()
 ```
+
+The PCA analysis indicates that gender may account for some of the variation in the dataset that we did not consider in our original analysis. For future analysis, we recommend including gender as a confounding factor in the model.
