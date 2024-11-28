@@ -4,23 +4,24 @@ format: html
 editor: visual
 ---
 
-## DEseq2 analysis
+## DESeq2 analysis
 
 ```{r}
-library(DESeq2)
+library("DESeq2")
 library("tidyverse")
-library(ggrepel)
+library("ggrepel")
 ```
 
 ### Step 1: preparing
 
 ```{r}
-sample_table|>
+sample_table <-sample_table |>
   mutate(smoker_groups=factor(smoker_groups))
 
 dds <- DESeqDataSetFromMatrix(countData = count_data_clean_DEseq_trans,
                               colData = sample_table_DEseq,
                               design= ~ smoker_groups)
+
 dds <- DESeq(dds)
 resultsNames(dds) # lists the coefficients
 ```
@@ -35,6 +36,7 @@ summary(res)
 Convert results from DESeq to a tidy dataframe, select "gene", "log2FoldChange" and "pvalue" columns.
 
 ```{r}
+
 res_tidy <- res |>
   as_tibble(rownames = "gene") |>
   select(gene, log2FoldChange, pvalue, padj)
@@ -43,10 +45,11 @@ res_tidy <- res |>
 Plotting the significant up/down regulated genes.
 
 ```{r}
+
 genes <- c("AMBP", "ASCL1", "BARX1", "DIRAS3", "BNC1")
-#, "MET", "LKB1", "BRAF", "PIK3CA", "ALK", "RET", "ROS1"
 
 # Add to the plot
+
 ggplot(res_tidy, aes(x = log2FoldChange, y = -log10(pvalue))) +
   geom_point(aes(color = ifelse(!is.na(padj) & 
                                   padj < 0.05 & 
@@ -70,6 +73,8 @@ ggplot(res_tidy, aes(x = log2FoldChange, y = -log10(pvalue))) +
 ggsave(here("results/05_volcano_plot.png"), plot= last_plot())
 ```
 
+Extract significant differently express genes
+
 ```{r}
 significant_genes <- res_tidy |>
   filter(padj<0.05 & abs(log2FoldChange)>2) |>
@@ -79,16 +84,20 @@ significant_genes <- res_tidy |>
 Extract normalized counts
 
 ```{r}
+
 normalized_counts <- counts(dds, normalized=TRUE)
 ```
 
 ```{r}
+
 normalized_counts_flipped <- as.data.frame(normalized_counts) |>
   rownames_to_column("Gene") |>
   pivot_longer(cols = -Gene, names_to = "Sample", values_to = "Count") |>
   pivot_wider(names_from = "Gene", values_from = "Count") |>
   column_to_rownames(var="Sample")
 ```
+
+Save Data
 
 ```{r}
 write.csv(normalized_counts, here("data/05_normalized_counts.csv"))
