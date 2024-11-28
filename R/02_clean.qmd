@@ -4,6 +4,26 @@ format: html
 editor: visual
 ---
 
+## Load libraries
+
+```{r setup, warning = FALSE , message=FALSE}
+library("tidyverse")
+library("here")
+```
+
+Load the data
+
+```{r}
+count_data = read_tsv(here("data/01_count_data_load.tsv"),
+                      show_col_types = FALSE)
+
+clinical_data = read_tsv(here("data/01_clinical_data_load.tsv"),
+                         show_col_types = FALSE)
+
+ensembl_to_gene_symbol = read_tsv(here("data/01_ensembl_to_gene_symbol_load.tsv"),
+                                  show_col_types = FALSE)
+```
+
 ## Cleaning of the count matrix
 
 Drop irrelevant columns in the mapping of Ensembl id to gene symbol.
@@ -20,10 +40,8 @@ Join the count_data and ensembl_to_gene_symbol tables on the "Ensembl_ID" column
 
 ```{r}
 count_data <- count_data |>
-  inner_join(
-    ensembl_to_gene_symbol, 
-    by = "Ensembl_ID"
-    ) |>
+  inner_join(ensembl_to_gene_symbol, 
+             by = "Ensembl_ID") |>
   select(-Ensembl_ID) |>
   relocate(gene)
 ```
@@ -32,37 +50,27 @@ Some genes are repeated in the rows; we need to merge them to ensure each gene i
 
 ```{r}
 count_data <- count_data |>
-  pivot_longer(
-    cols = -1,
-    names_to = "sample", 
-    values_to = "log2_value"
-    ) |>
+  pivot_longer(cols = -1,
+               names_to = "sample", 
+               values_to = "log2_value") |>
   mutate(count = 2^log2_value - 1) |>
   group_by(gene, sample) |>
-  summarise(
-    count = sum(count), 
-    .groups = "drop"
-    ) |>
-  pivot_wider(
-    names_from = sample,
-    values_from = count
-    )
+  summarise(count = sum(count), 
+            .groups = "drop") |>
+  pivot_wider(names_from = sample,
+              values_from = count)
 ```
 
 Transpose the data so that observations are in the rows and variables are in the columns, resulting in tidy data.
 
 ```{r}
 count_data <- count_data |>
-  pivot_longer(
-    cols = -gene, 
-    names_to = "sample",
-    values_to = "count"
-    ) |>
+  pivot_longer(cols = -gene, 
+               names_to = "sample",
+               values_to = "count") |>
   mutate(count = round(count)) |>
-  pivot_wider(
-    names_from = gene,
-    values_from = count
-    )
+  pivot_wider(names_from = gene,
+              values_from = count)
 ```
 
 ## Cleaning of the clinical data
@@ -71,30 +79,20 @@ Remove columns containing redundant or unnecessary information from the clinical
 
 ```{r}
 clinical_data_clean <- clinical_data |>
-  select(-c(
-    id, 
-    case_id, 
-    project_id.project, 
-    tissue_source_site_id.tissue_source_site, 
-    project.tissue_source_site, 
-    bcr_id.tissue_source_site, 
-    days_to_diagnosis.diagnoses, 
-    last_known_disease_status.diagnoses, 
-    alcohol_history.exposures, 
-    name.program.project, 
-    name.project, 
-    classification_of_tumor.diagnoses, 
-    tumor_grade.diagnoses, 
-    progression_or_recurrence.diagnoses, 
-    treatment_id.treatments.diagnoses, 
-    submitter_id.treatments.diagnoses, 
-    created_datetime.treatments.diagnoses, 
-    updated_datetime.treatments.diagnoses, 
-    sample_id.samples, 
-    composition.samples, 
-    pathology_report_uuid.samples, 
-    specimen_type.samples
-  ))
+  select(c(
+    sample,
+    pack_years_smoked.exposures,
+    race.demographic, 
+    gender.demographic, 
+    ajcc_pathologic_stage.diagnoses, 
+    vital_status.demographic, 
+    tissue_or_organ_of_origin.diagnoses, 
+    ajcc_pathologic_m.diagnoses,
+    age_at_index.demographic,
+    vital_status.demographic,
+    tissue_type.samples, 
+    name.tissue_source_site
+    ))
 ```
 
 Remove numerical columns with more than two-thirds of values as NAs and retain only rows with tumor samples.
@@ -160,4 +158,16 @@ write_tsv(count_data_clean, here("data/02_count_data_clean.tsv"))
 
 ```{r}
 write_tsv(clinical_data_clean, here("data/02_clinical_data_clean.tsv"))
+```
+
+## Save RDS
+
+```{r}
+saveRDS(count_data_clean, 
+        file = "02_count_data.rds")
+```
+
+```{r}
+saveRDS(clinical_data_clean, 
+        file = "02_clinical_data.rds")
 ```

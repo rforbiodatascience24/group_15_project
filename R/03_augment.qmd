@@ -4,6 +4,13 @@ format: html
 editor: visual
 ---
 
+## Load libraries
+
+```{r setup, warning = FALSE , message=FALSE}
+library("tidyverse")
+library("here")
+```
+
 ## Add new variables
 
 ```{r}
