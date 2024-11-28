@@ -63,11 +63,9 @@ count_data <- count_data |>
     )
 ```
 
-
 ## Cleaning of the clinical data
 
 Remove columns containing redundant or unnecessary information from the clinical_data table.
-
 
 ```{r}
 clinical_data_clean <- clinical_data |>
