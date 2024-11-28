@@ -40,7 +40,7 @@ clinical_data_augment |>
 
 The dataset is unbalanced regarding race, with 89% of samples from white patients.
 
-## Cancer Stage Distribution 
+## Cancer Stage Distribution
 
 ```{r}
 
@@ -133,16 +133,20 @@ dir.create(here("results"))
 ```
 
 ```{r}
+# Plotting samples per smoker group
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=smoker_groups, 
-                fill= smoker_groups)) +
+    mapping = aes(
+      x = smoker_groups, 
+      fill = smoker_groups
+      )
+    ) +
   geom_bar() +
   labs(
     x = "Smoker groups",
     y = "Count of samples (n)",
     title = "Samples per smoker group",
-    fill="Smoker groups"
+    fill = "Smoker groups"
   )
   
 ```
@@ -154,30 +158,39 @@ ggsave(here("results/04_samples_per_smoker_group.png"), plot= last_plot() )
 Here we have a bar chart showing the count of samples grouped by smoking history. Heavy smokers (\>= 40 pack years) are the predominant group (\~33%) out of the smokers, while \~46% of samples lack meaningful smoking data.
 
 ```{r}
+# Plotting samples per gender
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=gender.demographic, 
-                fill= gender.demographic)) +
+    mapping = aes(
+      x = gender.demographic, 
+      fill = gender.demographic
+      )
+    ) +
   geom_bar() +
   labs(
     x = "Gender",
     y = "Count of samples(n)",
     title = "Samples per gender",
-    fill="Gender"
+    fill = "Gender"
   )
 ```
 
 ```{r}
-ggsave(here("results/04_samples_per_gender.png"), plot= last_plot() )
+ggsave(here("results/04_samples_per_gender.png"), plot = last_plot() )
 ```
 
 This is a bar chart displaying the count of samples categorized by gender relatively balanced, with almost an equal number of samples for males and females.
 
 ```{r}
+
+# Plotting samples per cancer stage
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=ajcc_pathologic_stage.diagnoses, 
-                fill= ajcc_pathologic_stage.diagnoses)) +
+    mapping = aes(
+      x = ajcc_pathologic_stage.diagnoses, 
+      fill= ajcc_pathologic_stage.diagnoses
+      )
+    ) +
   geom_bar() +
   labs(
     x = "Cancer stage",
@@ -188,15 +201,16 @@ clinical_data_augment |>
 ```
 
 ```{r}
-ggsave(here("results/04_samples_cancer_stage.png"), plot= last_plot() )
+ggsave(here("results/04_samples_cancer_stage.png"), plot = last_plot() )
 ```
 
 This bar chart shows the distribution of samples across different cancer stages, representing \~60% of the samples from patients in Stage I.
 
 ```{r}
+# Plotting age distribution
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=age_at_index.demographic)) +
+    mapping = aes(x=age_at_index.demographic)) +
   geom_histogram(binwidth = 3, 
                  fill = "lightblue", color = "black") +
   labs(
@@ -223,7 +237,7 @@ clinical_data_augment |>
     x = "Cancer stage",
     y = "Age (years)",
     title = "Age distribution by cancer stage",
-    fill="Cancer stage"
+    fill = "Cancer stage"
   )
 ```
 
@@ -234,11 +248,15 @@ ggsave(here("results/04_age_cancer_stage.png"), plot= last_plot() )
 This boxplot compares the age distributions of patients across different cancer stages. Samples belonging to stage IV patients present a range of ages lower compared to prior stages.
 
 ```{r}
+# Plotting vital status vs. age at diagnosis
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=vital_status.demographic, 
-                y=age_at_index.demographic, 
-                fill= vital_status.demographic)) +
+    mapping = aes(
+      x = vital_status.demographic, 
+      y = age_at_index.demographic, 
+      fill = vital_status.demographic
+      )
+    ) +
   geom_boxplot() +
   labs(
     x = "Vital status",
@@ -255,11 +273,17 @@ ggsave(here("results/04_vital_status_vs_age.png"), plot= last_plot() )
 Here we have a boxplot comparing the age at diagnosis of patients grouped by their vital status. The majority of patients in the dataset are alive.
 
 ```{r}
+# Plotting smoker groups within each cancer stage
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=ajcc_pathologic_stage.diagnoses, 
-                fill= smoker_groups)) +
-  geom_bar(position="fill") +
+    mapping = aes(
+      x = ajcc_pathologic_stage.diagnoses, 
+      fill = smoker_groups
+      )
+    ) +
+  geom_bar(
+    position="fill"
+    ) +
   labs(
     x = "Cancer stage",
     y="Proportion of smoker group",
@@ -276,11 +300,18 @@ ggsave(here("results/04_smoker_groups_within_cancer_stage.png"), plot= last_plot
 This is a stacked bar chart showing the proportion of smoker groups for each cancer stage. The most remarkable situation is that all the samples regarding stage IIIB belong to heavy smokers.
 
 ```{r}
+# Plotting cancer stage within each smoker group
+
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=smoker_groups, 
-                fill=ajcc_pathologic_stage.diagnoses)) +
-  geom_bar(position="fill") +
+    mapping = aes(
+      x = smoker_groups, 
+      fill = ajcc_pathologic_stage.diagnoses
+      )
+    ) +
+  geom_bar(
+    position="fill"
+    ) +
   labs(
     x = "Smoker group",
     y="Proportion of cancer stages",
@@ -296,16 +327,23 @@ ggsave(here("results/04_cancer_stage_within_smoker_group.png"), plot= last_plot(
 Here is a stacked bar chart showing the proportion of cancer stages within each smoker group . In all the smoker groups the predominant stage of cancer is Stage IA and IB.
 
 ```{r}
+# Plotting gender distribution within cancer stages
+
 clinical_data_augment |>
   ggplot(
-    mapping=aes(x=ajcc_pathologic_stage.diagnoses, 
-                fill= gender.demographic)) +
-  geom_bar(position="fill") +
+    mapping = aes(
+      x = ajcc_pathologic_stage.diagnoses, 
+      fill = gender.demographic
+      )
+    ) +
+  geom_bar(
+    position = "fill"
+    ) +
   labs(
     x = "Cancer stage",
-    y="Gender",
+    y = "Gender",
     title = "Gender distribution within cancer stages",
-    fill="Gender"
+    fill = "Gender"
   )
 
 ```
@@ -319,15 +357,22 @@ Here is a stacked bar chart showing the distribution of genders within each canc
 ```{r}
 clinical_data_augment |> 
   ggplot(
-    aes(x= age_at_index.demographic,
-        fill= ajcc_pathologic_stage.diagnoses)) +
-      geom_histogram(binwidth= 15, 
-                     position="dodge") +
+    aes(
+      x = age_at_index.demographic,
+      fill = ajcc_pathologic_stage.diagnoses
+      )
+    ) +
+      geom_histogram(
+        binwidth= 15, 
+        position="dodge"
+        ) +
       facet_wrap(~gender.demographic) +
-      labs(title="Age distribution by cancer stage faceted by gender",
-           fill= "Cancer stage",
-           x= "Age (years)",
-           y= "Sample count (n)")
+      labs(
+        title = "Age distribution by cancer stage faceted by gender",
+        fill = "Cancer stage",
+        x = "Age (years)",
+        y = "Sample count (n)"
+        )
 
 ```
 
@@ -338,18 +383,26 @@ ggsave(here("results/04_age_by_cancer_stage_gender.png"), plot= last_plot() )
 Here we have a faceted histogram showing the age distribution within each cancer stage, separated by gender. The distribution differ a lot between male and female samples.
 
 ```{r}
+# Plotting age at diagnosis by race
 clinical_data_augment |>
   group_by(race.demographic) |>
-  filter(n() >= 2) |> #here we keep only the races with more than 2 samples for a clearer representation
+  filter(
+    n() >= 2
+    ) |> # Here we keep only the races with more than 2 samples for a clearer representation
   ungroup() |>
-  ggplot(aes(x = race.demographic, 
-             y = age_at_index.demographic, 
-             fill = race.demographic)) +
+  ggplot(aes(
+    x = race.demographic, 
+    y = age_at_index.demographic, 
+    fill = race.demographic
+    )
+    ) +
   geom_violin() +
-  labs(title = "Age at diagnosis by race", 
-       x = "Race", 
-       y = "Age at diagnosis (years)",
-       fill="Race")
+  labs(
+    title = "Age at diagnosis by race", 
+    x = "Race", 
+    y = "Age at diagnosis (years)",
+    fill = "Race"
+    )
 
 
 ```
@@ -361,15 +414,22 @@ ggsave(here("results/04_age_by_race_violin.png"), plot= last_plot() )
 Here we have a violin plot comparing the age distribution at diagnosis for different races. For samples from Asians the distribution is narrower and this indicates that there is less variation in the age at diagnosis. Whites have a wider range of age at diagnosis.
 
 ```{r}
+# Plotting age at diagnosis by gender
 clinical_data_augment |>
-  ggplot(aes(x = gender.demographic, 
-             y = age_at_index.demographic, 
-             fill = gender.demographic)) +
+  ggplot(
+    aes(
+      x = gender.demographic, 
+      y = age_at_index.demographic, 
+      fill = gender.demographic
+      )
+    ) +
   geom_violin() +
-  labs(title = "Age at diagnosis by gender", 
-       x = "Gender", 
-       y = "Age at Diagnosis (years)",
-       fill="Gender")
+  labs(
+    title = "Age at diagnosis by gender", 
+    x = "Gender", 
+    y = "Age at Diagnosis (years)",
+    fill = "Gender"
+    )
 ```
 
 ```{r}
@@ -383,24 +443,36 @@ This is a violin plot comparing the age distribution at diagnosis between gender
 Histogram displaying the frequency of the genes across the samples
 
 ```{r}
-# We first convert our count data into long format
+# Convert count data into long format
 gene_presence <- count_data_clean |>
   pivot_longer(
     cols = -1, # We exclude the first column (samples)
     names_to = "gene",
     values_to = "count"
   ) |>
-  filter(count > 0) |>
-  group_by(gene) |>
-  summarize(samples_present = n(), .groups = "drop")
+  filter(
+    count > 0
+    ) |>
+  group_by(
+    gene
+    ) |>
+  summarize(
+    samples_present = n(), .groups = "drop"
+    )
 ```
 
 ```{r}
+# Plotting the distribution of gene presence
 gene_presence |>
-  ggplot(aes(x = samples_present)) +
-  geom_histogram(binwidth = 5, 
-                 fill = "lightblue", 
-                 color = "black") +
+  ggplot(
+    aes(
+      x = samples_present
+      )
+    ) +
+  geom_histogram(
+    binwidth = 5, 
+    fill = "lightblue", 
+    color = "black") +
   labs(
     title = "Distribution of gene presence",
     x = "Number of samples a gene is present in (n)",
