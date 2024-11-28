@@ -1,17 +1,19 @@
 # 22160: R for Bio Data Science
 # Exploration and differential gene-expression analysis of TCGA - LUAD samples - Group 15
 
-Authors:
+Project Contributors: 
 
-José Dinis Coelho da Silva Ferreira (s212484)
+José Dinis Coelho da Silva Ferreira (s212484) - dinex1111
 
-Maria Gabriela Frascella (s231331)
+Maria Gabriela Frascella (s231331) - s233113
 
-Paula Gómez-Plana Rodríguez (s233165)
+Paula Gómez-Plana Rodríguez (s233165) - paula-gpr
 
-Alicia Llorente Herrero (s233658)
+Alicia Llorente Herrero (s233658) - alillorentehe
 
-Ona Saulianskaite (s232958)
+Ona Saulianskaite (s232958) - saulianskaitee
+
+We declare that all of the project members have contributed equally to the project.
 
 ## Introduction 
 
@@ -29,6 +31,15 @@ In particular, we used:
 [Phenotype information about the cohort. ]([url](https://xenabrowser.net/datapages/?dataset=TCGA-LUAD.clinical.tsv&host=https%3A%2F%2Fgdc.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)). This dataset contains metadata regarding our samples, that was interesting to consider during our analysis since it provided us with additional information regarding the cohort. The downloaded version was 09-07-2024. https://xenabrowser.net/datapages/?dataset=TCGA-LUAD.clinical.tsv&host=https%3A%2F%2Fgdc.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443
 
 [ID/Gene mapping file]([url](https://xenabrowser.net/datapages/?dataset=TCGA-LUAD.star_counts.tsv&host=https%3A%2F%2Fgdc.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)). Since our counts were for Ensembl IDs and we wanted to see the counts for the gene symbols, we downloaded this mapping file, which can be found under ID/Gene Mapping in the link. https://xenabrowser.net/datapages/?dataset=TCGA-LUAD.star_counts.tsv&host=https%3A%2F%2Fgdc.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443
+
+
+## How to navigate the repository 
+
+![image](https://github.com/user-attachments/assets/4a1ab4a1-b213-49d9-9d62-1d74841e30b4)
+
+The repository is organized as structured in the course 22160. Figure made by Leon E Jessen. 
+
+In order to run the qmd, the user needs to download the files specified in the Data AvailabilitSection,
 
 ## Dependencies
 This project makes use of the following packages:
