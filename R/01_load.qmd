@@ -67,3 +67,8 @@ write_tsv(clinical_data,
 write_tsv(ensembl_to_gene_symbol, 
           here("data/01_ensembl_to_gene_symbol_load.tsv"))
 ```
+
+```{r}
+saveRDS(count_data, 
+        file = "01_count_data.rds")
+```
