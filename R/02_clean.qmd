@@ -8,9 +8,11 @@ editor: visual
 
 Drop irrelevant columns in the mapping of ensemble id to gene symbol.
 
+Passing dplyr:: to avoid conflicts between packages in different RStudio servers.
+
 ```{r}
 ensemble_to_gene_symbol <- ensemble_to_gene_symbol |>
-  rename(Ensembl_ID = id) |>
+  dplyr::rename(Ensembl_ID = id) |>
   select(gene, Ensembl_ID)
 ```
 
