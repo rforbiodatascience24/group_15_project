@@ -45,7 +45,7 @@ resultsNames(dds)
 
 ### Step 2: Results Extraction
 
-Results derived from DESeq analysis are extracted specifying the groups to be compared and the level of significance.
+1. Results derived from DESeq analysis are extracted specifying the groups to be compared and the level of significance.
 
 ```{r}
 
@@ -60,7 +60,7 @@ res <- results(
 summary(res)
 ```
 
-Convert results from DESeq to a tidy dataframe, select "gene", "log2FoldChange" and "pvalue" columns.
+2. Convert results from DESeq to a tidy dataframe, select "gene", "log2FoldChange" and "pvalue" columns.
 
 ```{r}
 
@@ -70,6 +70,8 @@ res_tidy <- res |>
 ```
 
 ### Step 3: Plotting the significant up/down regulated genes.
+
+A volcano plot is 
 
 ```{r}
 
@@ -124,25 +126,35 @@ significant_genes <- res_tidy |>
   select(gene)
 ```
 
-2. Extracting normalized counts: normalization accounts for sequencing depth, library size
+2. Extracting normalized counts: normalization accounts for sequencing depth, library size and other systematic difference in the samples.
 
 ```{r}
 
 normalized_counts <- counts(dds, normalized=TRUE)
 ```
 
+3. Transforming data frame to the tidy format
+
 ```{r}
 
 normalized_counts_flipped <- as.data.frame(normalized_counts) |>
   rownames_to_column("Gene") |>
-  pivot_longer(cols = -Gene, names_to = "Sample", values_to = "Count") |>
-  pivot_wider(names_from = "Gene", values_from = "Count") |>
+  pivot_longer(
+    cols = -Gene, 
+    names_to = "Sample", 
+    values_to = "Count"
+) |>
+  pivot_wider(
+    names_from = "Gene", 
+    values_from = "Count"
+) |>
   column_to_rownames(var="Sample")
 ```
 
-Save Data
+### Step 5: Save Data
 
 ```{r}
+
 write.csv(normalized_counts, here("data/05_normalized_counts.csv"))
 write.csv(significant_genes, here("data/05_significant_genes.csv"))
 ```
