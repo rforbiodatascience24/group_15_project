@@ -8,15 +8,6 @@ editor: visual
 
 Differential gene expression analysis will be conducted using the R package "DESeq2". The objective is to identify genes that are significantly differently expressed among patients with lung adenocarcinoma across three distinct groups: light, medium and heavy smokers. Identifying these genes will give insights into the biological pathways influenced by smoking intensity in lung adenocarcinoma.
 
-```{r}
-
-#Load libraries
-
-library("DESeq2")
-library("tidyverse")
-library("ggrepel")
-```
-
 ### Step 1: Preparing data for analysis and running DESeq2 pipeline
 
 ```{r}

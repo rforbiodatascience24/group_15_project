@@ -7,11 +7,13 @@ knitr:
     warning: false
 ---
 
-## Uploading libraries
+## Uploading libraries for the entire project
 
 ```{r setup, warning = FALSE , message=FALSE}
 library("tidyverse")
 library("here")
+library("DESeq2")
+library("ggrepel")
 ```
 
 ## Loading files
