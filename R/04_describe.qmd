@@ -18,6 +18,7 @@ For the gender variable in our dataset:
 
 ```{r}
 
+# Count and calculate percentage by gender
 clinical_data_augment |> 
   count(gender.demographic) |> 
   mutate(percentage = n * 100 / sum(n))  
@@ -29,6 +30,7 @@ The dataset is balanced in terms of gender, with nearly equal representation of 
 
 ```{r}
 
+# Count and calculate percentage by race
 clinical_data_augment |> 
   count(race.demographic) |> 
   mutate(percentage = n * 100 / sum(n))
@@ -40,6 +42,7 @@ The dataset is unbalanced regarding race, with 89% of samples from white patient
 
 ```{r}
 
+# Count and calculate percentage by pathologic stage
 clinical_data_augment |> 
   count(ajcc_pathologic_stage.diagnoses) |>
   mutate(percentage = n * 100 / sum(n))
@@ -51,6 +54,7 @@ Most samples (\~60%) come from patients in Stage I (IA and IB).
 
 ```{r}
 
+# Calculate mean, median, and standard deviation of age
 clinical_data_augment |> 
   summarise(mean_age = mean(age_at_index.demographic, na.rm = TRUE), 
             median_age = median(age_at_index.demographic, na.rm = TRUE),
@@ -67,6 +71,7 @@ Standard deviation: 9.5 years.
 
 ```{r}
 
+# Count and calculate percentage by smoker groups
 clinical_data_augment |> 
   count(smoker_groups) |>
   mutate(percentage = n * 100 / sum(n))
@@ -79,6 +84,8 @@ Heavy smokers (\>= 40 pack-years) make up \~33% of the samples.
 ## **Average Age by Smoker Group**
 
 ```{r}
+
+# Calculate mean age for each smoker group
 clinical_data_augment |>
   group_by(smoker_groups) |>
   summarize(mean_age = mean(age_at_index.demographic, na.rm = TRUE))
@@ -90,6 +97,8 @@ As observed in the table above, the patients from the light smokers group have a
 ## **Percentage of Alive and Deceased by Gender**
 
 ```{r}
+
+# Count and calculate percentage of vital status within each gender
 clinical_data_augment |>
   count(gender.demographic, vital_status.demographic) |>
   group_by(gender.demographic) |>
@@ -102,6 +111,8 @@ The table shows that the majority of patients in the study are still alive. This
 ## **Cancer Stage Distribution by Gender**
 
 ```{r}
+
+# Count pathologic stages by gender in wide format
 clinical_data_augment |>
   count(gender.demographic, ajcc_pathologic_stage.diagnoses) |>
   spread(ajcc_pathologic_stage.diagnoses, n, fill = 0)
@@ -119,6 +130,7 @@ dir.create(here("results"))
 ```
 
 ```{r}
+
 # Plotting samples per smoker group
 clinical_data_augment |>
   ggplot(mapping = aes(x = smoker_groups, 
@@ -138,6 +150,7 @@ ggsave(here("results/04_samples_per_smoker_group.png"), plot = last_plot() )
 Here we have a bar chart showing the count of samples grouped by smoking history. Heavy smokers (\>= 40 pack years) are the predominant group (\~33%) out of the smokers, while \~46% of samples lack meaningful smoking data.
 
 ```{r}
+
 # Plotting samples per gender
 clinical_data_augment |>
   ggplot(mapping = aes(x = gender.demographic, 
@@ -175,6 +188,7 @@ ggsave(here("results/04_samples_cancer_stage.png"), plot = last_plot() )
 This bar chart shows the distribution of samples across different cancer stages, representing \~60% of the samples from patients in Stage I.
 
 ```{r}
+
 # Plotting age distribution
 clinical_data_augment |>
   ggplot(mapping = aes(x = age_at_index.demographic)) +
@@ -192,6 +206,9 @@ ggsave(here("results/04_age_histogram.png"), plot = last_plot())
 This histogram illustrates the age distribution of the samples. The majority of patients are aged between 60 and 75, with a mean age of 66.7 and a median age of 68.
 
 ```{r}
+
+# Plotting of age distribution by cancer stage
+
 clinical_data_augment |>
   ggplot(mapping = aes(x = ajcc_pathologic_stage.diagnoses, 
                        y = age_at_index.demographic, 
@@ -210,6 +227,7 @@ ggsave(here("results/04_age_cancer_stage.png"), plot= last_plot() )
 This boxplot compares the age distributions of patients across different cancer stages. Samples belonging to stage IV patients present a range of ages lower compared to prior stages.
 
 ```{r}
+
 # Plotting vital status vs. age at diagnosis
 clinical_data_augment |>
   ggplot(mapping = aes(x = vital_status.demographic, 
@@ -229,6 +247,7 @@ ggsave(here("results/04_vital_status_vs_age.png"), plot = last_plot() )
 Here we have a boxplot comparing the age at diagnosis of patients grouped by their vital status. The majority of patients in the dataset are alive.
 
 ```{r}
+
 # Plotting smoker groups within each cancer stage
 clinical_data_augment |>
   ggplot(mapping = aes(x = ajcc_pathologic_stage.diagnoses, 
@@ -248,8 +267,8 @@ ggsave(here("results/04_smoker_groups_within_cancer_stage.png"), plot = last_plo
 This is a stacked bar chart showing the proportion of smoker groups for each cancer stage. The most remarkable situation is that all the samples regarding stage IIIB belong to heavy smokers.
 
 ```{r}
-# Plotting cancer stage within each smoker group
 
+# Plotting cancer stage within each smoker group
 clinical_data_augment |>
   ggplot(mapping = aes(x = smoker_groups, 
                        fill = ajcc_pathologic_stage.diagnoses)) +
@@ -267,8 +286,8 @@ ggsave(here("results/04_cancer_stage_within_smoker_group.png"), plot = last_plot
 Here is a stacked bar chart showing the proportion of cancer stages within each smoker group . In all the smoker groups the predominant stage of cancer is Stage IA and IB.
 
 ```{r}
-# Plotting gender distribution within cancer stages
 
+# Plotting gender distribution within cancer stages
 clinical_data_augment |>
   ggplot(mapping = aes(x = ajcc_pathologic_stage.diagnoses, 
                        fill = gender.demographic)) +
@@ -287,6 +306,8 @@ ggsave(here("results/04_gender_within_cancer_stages.png"), plot = last_plot() )
 Here is a stacked bar chart showing the distribution of genders within each cancer stage. In earlier stages of cancer there is a balance distribution between genders, while in later stages we have a predominance of male samples (Stage IV).
 
 ```{r}
+
+# Plotting age distribution by cancer stage, faceted by gender
 clinical_data_augment |> 
   ggplot(aes(x = age_at_index.demographic,
              fill = ajcc_pathologic_stage.diagnoses)) +
