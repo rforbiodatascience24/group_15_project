@@ -4,9 +4,9 @@ format: html
 editor: visual
 ---
 
-## Differential gene expresion analysis
+## Differential gene expression analysis
 
-Differential gene expression analysis will be conducted using the R package "DESeq2". The objective is to identify genes that are signicantly differentlly expressed among patients with lung adenocarcinoma across three distict groups: light, medium and heavy smokers.
+Differential gene expression analysis will be conducted using the R package "DESeq2". The objective is to identify genes that are significantly differently expressed among patients with lung adenocarcinoma across three distinct groups: light, medium and heavy smokers.
 
 ```{r}
 
@@ -45,7 +45,7 @@ resultsNames(dds)
 
 ### Step 2: Results Extraction
 
-1. Results derived from DESeq analysis are extracted specifying the groups to be compared and the level of significance.
+1.  Results derived from DESeq analysis are extracted specifying the groups to be compared and the level of significance.
 
 ```{r}
 
@@ -60,7 +60,7 @@ res <- results(
 summary(res)
 ```
 
-2. Convert results from DESeq to a tidy dataframe, select "gene", "log2FoldChange" and "pvalue" columns.
+2.  Convert results from DESeq to a tidy data frame, select "gene", "log2FoldChange" and "pvalue" columns.
 
 ```{r}
 
@@ -71,7 +71,7 @@ res_tidy <- res |>
 
 ### Step 3: Plotting the significant up/down regulated genes.
 
-A volcano plot is 
+A volcano plot is
 
 ```{r}
 
@@ -117,7 +117,7 @@ ggsave(
 
 ### Step 4: Extracting Relevant Information
 
-1. Extracting significant differently express genes: genes with values of log2FoldChange greater than 2 and p-value (padj) below 0.05 are extrated and tidied into a data frame
+1.  Extract significant differently express genes: Genes with values of log2FoldChange greater than 2 and p-value below 0.05 are extracted and tidied into a data frame
 
 ```{r}
 
@@ -126,14 +126,14 @@ significant_genes <- res_tidy |>
   select(gene)
 ```
 
-2. Extracting normalized counts: normalization accounts for sequencing depth, library size and other systematic difference in the samples.
+2.  Extract normalized counts: normalization accounts for sequencing depth, library size and other systematic difference in the samples.
 
 ```{r}
 
 normalized_counts <- counts(dds, normalized=TRUE)
 ```
 
-3. Transforming data frame to the tidy format
+3.  Transform data frame to the tidy format
 
 ```{r}
 
