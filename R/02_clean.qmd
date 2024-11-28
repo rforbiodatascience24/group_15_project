@@ -69,7 +69,9 @@ clinical_data_clean <- clinical_data |>
     tissue_or_organ_of_origin.diagnoses, 
     ajcc_pathologic_m.diagnoses,
     age_at_index.demographic,
-    vital_status.demographic
+    vital_status.demographic,
+    tissue_type.samples, 
+    name.tissue_source_site
     ))
 ```
 
@@ -136,4 +138,16 @@ write_tsv(count_data_clean, here("data/02_count_data_clean.tsv"))
 
 ```{r}
 write_tsv(clinical_data_clean, here("data/02_clinical_data_clean.tsv"))
+```
+
+## Save RDS
+
+```{r}
+saveRDS(count_data_clean, 
+        file = "02_count_data.rds")
+```
+
+```{r}
+saveRDS(clinical_data_clean, 
+        file = "02_clinical_data.rds")
 ```
