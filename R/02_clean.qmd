@@ -6,22 +6,22 @@ editor: visual
 
 ## Cleaning of the count matrix
 
-Drop irrelevant columns in the mapping of ensemble id to gene symbol.
+Drop irrelevant columns in the mapping of Ensembl id to gene symbol.
 
 Passing dplyr:: to avoid conflicts between packages in different RStudio servers.
 
 ```{r}
-ensemble_to_gene_symbol <- ensemble_to_gene_symbol |>
+ensembl_to_gene_symbol <- ensembl_to_gene_symbol |>
   dplyr::rename(Ensembl_ID = id) |>
   select(gene, Ensembl_ID)
 ```
 
-Join the count_data and ensemble_to_gene_symbol tables on the "Ensembl_ID" column.
+Join the count_data and ensembl_to_gene_symbol tables on the "Ensembl_ID" column.
 
 ```{r}
 count_data <- count_data |>
   inner_join(
-    ensemble_to_gene_symbol, 
+    ensembl_to_gene_symbol, 
     by = "Ensembl_ID"
     ) |>
   select(-Ensembl_ID) |>
