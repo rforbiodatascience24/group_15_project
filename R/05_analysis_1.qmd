@@ -61,7 +61,7 @@ res <- results(
 summary(res)
 ```
 
-2.  Convert results from DESeq to a tidy data frame, select "gene", "log2FoldChange" and "pvalue" columns.
+2.  Convert results from DESeq to a tidy data frame, select "gene", "log2FoldChange", "pvalue" and "padj" columns.
 
 ```{r}
 
@@ -72,7 +72,7 @@ res_tidy <- res |>
 
 ### Step 3: Plotting the significant up/down regulated genes.
 
-Create a volcano plot to visualize the distribution of significant genes
+Create a volcano plot to visualize the distribution of significant genes.
 
 ```{r}
 
@@ -117,7 +117,7 @@ ggsave(
 
 ### Step 4: Extracting Relevant Information
 
-1.  Extract significant differently expressed genes: Filter genes with values of log2FoldChange greater than 2 and p-value below 0.05.
+1.  Extract significant differently expressed genes: Filter genes with values of "log2FoldChange" \> 2 and p-value \< 0.05.
 
 ```{r}
 
