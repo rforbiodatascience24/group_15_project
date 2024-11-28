@@ -4,30 +4,49 @@ format: html
 editor: visual
 ---
 
-## DESeq2 analysis
+## Differential gene expresion analysis
+
+Differential gene expression analysis will be conducted using the R package "DESeq2". The objective is to identify genes that are signicantly differentlly expressed among patients with lung adenocarcinoma across three distict groups: light, medium and heavy smokers.
 
 ```{r}
+
+#Load libraries
+
 library("DESeq2")
 library("tidyverse")
 library("ggrepel")
 ```
 
-### Step 1: preparing
+### Step 1: preparing data for analysis
 
 ```{r}
+
+# Mutating smoker_groups variable to ensure it is treated as a factor
+
 sample_table <-sample_table |>
   mutate(smoker_groups=factor(smoker_groups))
 
-dds <- DESeqDataSetFromMatrix(countData = count_data_clean_DEseq_trans,
-                              colData = sample_table_DEseq,
-                              design= ~ smoker_groups)
+# Create a DESeq2 Dataset
+
+dds <- DESeqDataSetFromMatrix(
+  countData = count_data_clean_DEseq_trans, 
+  colData = sample_table_DEseq,
+  design= ~ smoker_groups
+)
+
 
 dds <- DESeq(dds)
 resultsNames(dds) # lists the coefficients
 ```
 
 ```{r}
-res <- results(dds, contrast = list(c("smoker_groups_heavy_vs_light", "smoker_groups_medium_vs_light")), alpha=0.05)
+
+res <- results(
+  dds, 
+  contrast = list(c("smoker_groups_heavy_vs_light", "smoker_groups_medium_vs_light")),
+  alpha=0.05
+)
+
 # or to shrink log fold changes association with condition:
 
 summary(res)
@@ -51,26 +70,39 @@ genes <- c("AMBP", "ASCL1", "BARX1", "DIRAS3", "BNC1")
 # Add to the plot
 
 ggplot(res_tidy, aes(x = log2FoldChange, y = -log10(pvalue))) +
-  geom_point(aes(color = ifelse(!is.na(padj) & 
-                                  padj < 0.05 & 
-                                  abs(log2FoldChange) > 2, 
-                                "Significant", "Not significant")), 
-                                alpha = 0.8) +
-  labs(title = "Volcano plot for down/up regulated genes with significance < 0.05", color = "Significant/ Unsignificant", x = "log2FC", y = "-log10(pvalue)") +
+  geom_point(aes(
+    color = ifelse(
+      !is.na(padj) & padj < 0.05 & abs(log2FoldChange) > 2, 
+      "Significant", 
+      "Not significant")
+    ), 
+    
+    alpha = 0.8
+) +
+  labs(
+    title = "Volcano plot for down/up regulated genes with significance < 0.05", 
+    color = "Significant/ Unsignificant", 
+    x = "log2FC",
+    y = "-log10(pvalue)"
+) +
   geom_point(
     data = res_tidy |> filter (gene %in% genes), 
     size=2,
-    color = "black") +
+    color = "black"
+) +
   geom_label_repel(
     data = res_tidy |> filter (gene %in% genes), 
     aes(label=gene),
     size=2,
     color = "black", 
     max.overlaps=Inf,
-    segment.color="transparent") +
+    segment.color="transparent"
+) +
   theme_minimal()
 
-ggsave(here("results/05_volcano_plot.png"), plot= last_plot())
+ggsave(
+  here("results/05_volcano_plot.png"),
+  plot= last_plot())
 ```
 
 Extract significant differently express genes
