@@ -1,5 +1,3 @@
-## Loading files:
-
 ## Uploading libraries
 
 ```{r}
@@ -7,36 +5,45 @@ library("tidyverse")
 library("here")
 ```
 
-## Load files
+## Loading files
 
-In this project we are working with three files: One with the counts data, and one with clinical data
+In this project we are working with three files: One with the counts data, one with clinical data, and one that maps the gene IDs to the Ensembl IDs.
+
+Count data:
 
 ```{r}
 count_data = read_tsv(here("_raw/TCGA-LUAD.star_counts.tsv.gz"))
 ```
 
+Clinical data:
+
 ```{r}
 clinical_data = read_tsv(here("_raw/TCGA-LUAD.clinical.tsv.gz"))
 ```
+
+Mapping of Ensembl and gene ids:
 
 ```{r}
 ensemble_to_gene_symbol = read_tsv(here("_raw/gencode.v36.annotation.gtf.gene.probemap"))
 ```
 
-## Save the files into two separate tsv files in the data folder
+## Save the files into separate tsv files in the data folder
 
 ```{r}
 dir.create(here("data"))
 ```
 
 ```{r}
-write_tsv(count_data, here("data/01_count_data_load.tsv"))
+write_tsv(count_data, 
+          here("data/01_count_data_load.tsv"))
 ```
 
 ```{r}
-write_tsv(clinical_data, here("data/01_clinical_data_load.tsv"))
+write_tsv(clinical_data, 
+          here("data/01_clinical_data_load.tsv"))
 ```
 
 ```{r}
-write_tsv(ensemble_to_gene_symbol, here("data/01_ensemble_to_gene_symbol_load.tsv"))
+write_tsv(ensemble_to_gene_symbol, 
+          here("data/01_ensemble_to_gene_symbol_load.tsv"))
 ```
