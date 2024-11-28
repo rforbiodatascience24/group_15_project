@@ -32,9 +32,13 @@ In particular, we used:
 
 ## Dependencies
 This project makes use of the following packages:
+
 tidyverse
+
 here
+
 DESeq2
+
 ggrepel
 
 
