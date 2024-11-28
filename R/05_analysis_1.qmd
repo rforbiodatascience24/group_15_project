@@ -6,7 +6,7 @@ editor: visual
 
 ## Differential gene expression analysis
 
-Differential gene expression analysis will be conducted using the R package "DESeq2". The objective is to identify genes that are significantly differently expressed among patients with lung adenocarcinoma across three distinct groups: light, medium and heavy smokers.
+Differential gene expression analysis will be conducted using the R package "DESeq2". The objective is to identify genes that are significantly differently expressed among patients with lung adenocarcinoma across three distinct groups: light, medium and heavy smokers. Identifying these genes will give insights into the biological pathways influenced by smoking intensity in lung adenocarcinoma.
 
 ```{r}
 
@@ -21,7 +21,7 @@ library("ggrepel")
 
 ```{r}
 
-# Mutating smoker_groups variable to ensure it is treated as a factor
+# Convert smoker_groups variable to a factor
 
 sample_table <-sample_table |>
   mutate(smoker_groups=factor(smoker_groups))
@@ -45,17 +45,18 @@ resultsNames(dds)
 
 ### Step 2: Results Extraction
 
-1.  Results derived from DESeq analysis are extracted specifying the groups to be compared and the level of significance.
+1.  Results from DESeq analysis are extracted specifying the groups to be compared and the level of significance.
 
 ```{r}
 
+# Extract result
 res <- results(
   dds, 
   contrast = list(c("smoker_groups_heavy_vs_light", "smoker_groups_medium_vs_light")),
   alpha=0.05
 )
 
-# or to shrink log fold changes association with condition:
+# Summerize results
 
 summary(res)
 ```
@@ -71,7 +72,7 @@ res_tidy <- res |>
 
 ### Step 3: Plotting the significant up/down regulated genes.
 
-A volcano plot is
+Create a volcano plot to visualize the distribution of significant genes
 
 ```{r}
 
@@ -86,7 +87,6 @@ ggplot(res_tidy, aes(x = log2FoldChange, y = -log10(pvalue))) +
       "Significant", 
       "Not significant")
     ), 
-    
     alpha = 0.8
 ) +
   labs(
@@ -117,7 +117,7 @@ ggsave(
 
 ### Step 4: Extracting Relevant Information
 
-1.  Extract significant differently express genes: Genes with values of log2FoldChange greater than 2 and p-value below 0.05 are extracted and tidied into a data frame
+1.  Extract significant differently expressed genes: Filter genes with values of log2FoldChange greater than 2 and p-value below 0.05.
 
 ```{r}
 
@@ -126,14 +126,14 @@ significant_genes <- res_tidy |>
   select(gene)
 ```
 
-2.  Extract normalized counts: normalization accounts for sequencing depth, library size and other systematic difference in the samples.
+2.  Extract normalized counts: Normalization accounts for sequencing depth, library size and other systematic difference in the samples.
 
 ```{r}
 
 normalized_counts <- counts(dds, normalized=TRUE)
 ```
 
-3.  Transform data frame to the tidy format
+3.  Transform data to a tidy format
 
 ```{r}
 
