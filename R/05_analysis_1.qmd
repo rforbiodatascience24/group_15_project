@@ -173,5 +173,5 @@ write_tsv(normalized_counts_flipped,
 
 ```{r}
 
-write.csv(significant_genes, 
+write.csv(significant_genes, here("data/05_significant_genes.csv"))
 ```

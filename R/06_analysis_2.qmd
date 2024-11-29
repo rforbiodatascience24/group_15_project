@@ -82,6 +82,9 @@ Plot the biplots:
 
 ```{r}
 pca_plotting(color_by = "gender.demographic", PCAtitle = "PCA Plot of Samples Colored by Gender", Legendname = "Gender")
+
+ggsave(here("results/06_pca_biplot_gender.png"),
+       plot= last_plot())
 ```
 
 ```{r}

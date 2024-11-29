@@ -1,5 +1,5 @@
 ---
-title: "Presentation"
+title: "Exploration and differential gene-expression analysis of TCGA - LUAD samples - Group 15"
 format: revealjs
 editor: visual
 ---
@@ -13,9 +13,14 @@ library(tidyverse)
 
 ## Introduction
 
--Lung adenocarcinoma is the primary cause of cancer-related death worldwide
+- Lung adenocarcinoma is the primary cause of cancer-related death worldwide
 
--Smoking accounts for 80-90 % of the lung cancer cases
+
+- Smoking accounts for 80-90 % of the lung cancer cases
+
+
+- Our aim is to analyse differential gene expression between heavy, medium and light smokers to understand the impact of varying smoking intensities on lung adenocarcinoma samples.
+
 
 ::: footer
 Tonya Walser, Xiaoyan Cui, Jane Yanagawa, Jay M. Lee, Eileen Heinrich, Gina Lee, Sherven Sharma, and Steven M. Dubinett. Smoking and Lung Cancer. Proceedings of the American Thoracic Society, 5(8):811–815, December 2008. ISSN 1546-3222. doi: 10.1513/pats.200809-100TH
@@ -36,7 +41,7 @@ gene_ensembl_subset <- gene_ensembl[1:15,1:2]
 
 ```
 
-## Materials and Methods
+## Materials
 
 ```{r, results='asis'}
 # Clinical Data Table
@@ -110,10 +115,41 @@ kable(gene_ensembl_subset,
 cat("</div></div>")
 ```
 
-## Results
+## Methods: Workflow
+![](photos/diagram.jpg){width="100%"}
 
-Image
+## Methods: Sample description
 
-![raw_counts](../results/04_age_histogram.png)
+- The data set comprises 53% females and 47% males, with an ethnicity distribution of 2% Asian, 8% Black or African, 1% Not Reported, and 89% White.
+- The median of age is 68.
+
+::: {.row}
+::: {.column width="50%"}
+![Smoker Group](../results/04_samples_per_smoker_group.png){width="100%"}
+:::
+::: {.column width="50%"}
+![Gender](../results/04_samples_per_gender.png){width="100%"}
+:::
+:::
+
+## Methods: DESeq2
+DESeq2 performs these following steps to identify whether a gene is differentially expressed or not. So for each gene, DESeq2 seek to estimate:
+
+- Estimate size factor 
+- Estimates dispersions 
+- Fits a linear model: from these model we get some values on which a statistical test is applied and we get a p value. Based on the p value we can identify whether a gene is differentially expressed or not. 
+- Hypothesis testing
+
+
+## DESeq Results: Volcano Plot
+
+![](../results/05_volcano_plot.png)
+
+## Results: PCA Biplot
+
+![](../results/06_pca_biplot_gender.png)
+
+
 
 ## Discussion
+- PCA Biplot shows that other biological variables, like gender, should've been accounted for in our DESeq analysis. 
