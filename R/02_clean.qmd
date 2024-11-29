@@ -102,7 +102,7 @@ clinical_data_clean <- clinical_data |>
   ))
 ```
 
-Remove numerical columns with more than two-thirds of values as NAs and retain only rows with tumor samples.
+Remove numerical columns with more than two-thirds of values as NAs and retain only rows with tumor samples. Filter the count matrix to retain only the samples present in clinical_data_clean for 'Tumor' tissue type.
 
 ```{r}
 
@@ -110,8 +110,6 @@ clinical_data_clean <- clinical_data_clean |>
   select(where(~ sum(is.na(.)) <= 2/3*nrow(clinical_data_clean))) |>
   filter(tissue_type.samples == "Tumor")
 ```
-
-Filter the count matrix to retain only the samples present in clinical_data_clean for 'Tumor' tissue type.
 
 ```{r}
 
@@ -139,14 +137,14 @@ To perform differential gene expression analysis (DESeq2) based on patients' smo
 
 ```{r}
 
-clinical_data_clean_DEseq <- clinical_data_clean |> 
+clinical_data_clean_DESeq <- clinical_data_clean |> 
   filter(!is.na(pack_years_smoked.exposures))
 ```
 
 ```{r}
 
-count_data_clean_DEseq <- count_data_clean |>
-  semi_join(clinical_data_clean_DEseq, by = "sample")
+count_data_clean_DESeq <- count_data_clean |>
+  semi_join(clinical_data_clean_DESeq, by = "sample")
 ```
 
 Transpose the count data matrix to match DESeq2 format, with genes as rows and samples as columns.
@@ -198,6 +196,6 @@ saveRDS(clinical_data_clean,
 
 ```{r}
 
-saveRDS(count_data_DESeq_clean, 
+saveRDS(count_data_clean_DESeq, 
           here("presentation_data/02_count_data_clean_DESeq.rds"))
 ```
