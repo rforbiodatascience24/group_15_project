@@ -94,11 +94,11 @@ write_tsv(sample_table_DESeq,
 ```{r}
 
 saveRDS(clinical_data_augment,         
-        file = here("presentation_data/03_clinical_data_augment.rds"))
+        file = here("doc/presentation_data/03_clinical_data_augment.rds"))
 ```
 
 ```{r}
 
 saveRDS(sample_table_DESeq,          
-        file = here("presentation_data/03_sample_table_DESeq.rds"))
+        file = here("doc/presentation_data/03_sample_table_DESeq.rds"))
 ```

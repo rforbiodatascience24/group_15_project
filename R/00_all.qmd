@@ -4,6 +4,12 @@ format: html
 editor: visual
 ---
 
+**Script to run all the qmd files to perform the analysis**
+
+```{r}
+library("quarto")
+```
+
 ```{r}
 quarto_render(input = "01_load.qmd")
 quarto_render(input = "02_clean.qmd")

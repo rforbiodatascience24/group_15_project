@@ -184,17 +184,17 @@ write_tsv(count_data_clean_DESeq,
 ```{r}
 
 saveRDS(count_data_clean, 
-        file = here("presentation_data/02_count_data.rds"))
+        file = here("doc/presentation_data/02_count_data.rds"))
 ```
 
 ```{r}
 
 saveRDS(clinical_data_clean, 
-        file = here("presentation_data/02_clinical_data.rds"))
+        file = here("doc/presentation_data/02_clinical_data.rds"))
 ```
 
 ```{r}
 
 saveRDS(count_data_clean_DESeq, 
-          here("presentation_data/02_count_data_clean_DESeq.rds"))
+          here("doc/presentation_data/02_count_data_clean_DESeq.rds"))
 ```
