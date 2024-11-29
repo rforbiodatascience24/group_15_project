@@ -4,6 +4,28 @@ format: html
 editor: visual
 ---
 
+## Load libraries
+
+```{r setup, warning = FALSE , message=FALSE}
+
+library("tidyverse")
+library("here")
+```
+
+## Load the data
+
+```{r}
+
+count_data = read_tsv(here("data/01_count_data_load.tsv"),
+                      show_col_types = FALSE)
+
+clinical_data = read_tsv(here("data/01_clinical_data_load.tsv"),
+                         show_col_types = FALSE)
+
+ensembl_to_gene_symbol = read_tsv(here("data/01_ensembl_to_gene_symbol_load.tsv"),
+                                  show_col_types = FALSE)
+```
+
 ## Cleaning of the count matrix
 
 Drop irrelevant columns in the mapping of Ensembl id to gene symbol.
@@ -11,6 +33,7 @@ Drop irrelevant columns in the mapping of Ensembl id to gene symbol.
 Passing dplyr:: to avoid conflicts between packages in different RStudio servers.
 
 ```{r}
+
 ensembl_to_gene_symbol <- ensembl_to_gene_symbol |>
   dplyr::rename(Ensembl_ID = id) |>
   select(gene, Ensembl_ID)
@@ -19,11 +42,10 @@ ensembl_to_gene_symbol <- ensembl_to_gene_symbol |>
 Join the count_data and ensembl_to_gene_symbol tables on the "Ensembl_ID" column.
 
 ```{r}
+
 count_data <- count_data |>
-  inner_join(
-    ensembl_to_gene_symbol, 
-    by = "Ensembl_ID"
-    ) |>
+  inner_join(ensembl_to_gene_symbol, 
+             by = "Ensembl_ID") |>
   select(-Ensembl_ID) |>
   relocate(gene)
 ```
@@ -31,38 +53,30 @@ count_data <- count_data |>
 Some genes are repeated in the rows; we need to merge them to ensure each gene is unique, and reverse-transform the data to facilitate this merging.
 
 ```{r}
+
 count_data <- count_data |>
-  pivot_longer(
-    cols = -1,
-    names_to = "sample", 
-    values_to = "log2_value"
-    ) |>
+  pivot_longer(cols = -1,
+               names_to = "sample", 
+               values_to = "log2_value") |>
   mutate(count = 2^log2_value - 1) |>
   group_by(gene, sample) |>
-  summarise(
-    count = sum(count), 
-    .groups = "drop"
-    ) |>
-  pivot_wider(
-    names_from = sample,
-    values_from = count
-    )
+  summarise(count = sum(count), 
+            .groups = "drop") |>
+  pivot_wider(names_from = sample,
+              values_from = count)
 ```
 
 Transpose the data so that observations are in the rows and variables are in the columns, resulting in tidy data.
 
 ```{r}
+
 count_data <- count_data |>
-  pivot_longer(
-    cols = -gene, 
-    names_to = "sample",
-    values_to = "count"
-    ) |>
+  pivot_longer(cols = -gene, 
+               names_to = "sample",
+               values_to = "count") |>
   mutate(count = round(count)) |>
-  pivot_wider(
-    names_from = gene,
-    values_from = count
-    )
+  pivot_wider(names_from = gene,
+              values_from = count)
 ```
 
 ## Cleaning of the clinical data
@@ -70,44 +84,35 @@ count_data <- count_data |>
 Remove columns containing redundant or unnecessary information from the clinical_data table.
 
 ```{r}
+
 clinical_data_clean <- clinical_data |>
-  select(-c(
-    id, 
-    case_id, 
-    project_id.project, 
-    tissue_source_site_id.tissue_source_site, 
-    project.tissue_source_site, 
-    bcr_id.tissue_source_site, 
-    days_to_diagnosis.diagnoses, 
-    last_known_disease_status.diagnoses, 
-    alcohol_history.exposures, 
-    name.program.project, 
-    name.project, 
-    classification_of_tumor.diagnoses, 
-    tumor_grade.diagnoses, 
-    progression_or_recurrence.diagnoses, 
-    treatment_id.treatments.diagnoses, 
-    submitter_id.treatments.diagnoses, 
-    created_datetime.treatments.diagnoses, 
-    updated_datetime.treatments.diagnoses, 
-    sample_id.samples, 
-    composition.samples, 
-    pathology_report_uuid.samples, 
-    specimen_type.samples
+  select(c(
+    sample,
+    pack_years_smoked.exposures,
+    race.demographic, 
+    gender.demographic, 
+    ajcc_pathologic_stage.diagnoses, 
+    vital_status.demographic, 
+    tissue_or_organ_of_origin.diagnoses, 
+    ajcc_pathologic_m.diagnoses,
+    age_at_index.demographic,
+    vital_status.demographic,
+    tissue_type.samples, 
+    name.tissue_source_site
   ))
 ```
 
-Remove numerical columns with more than two-thirds of values as NAs and retain only rows with tumor samples.
+Remove numerical columns with more than two-thirds of values as NAs and retain only rows with tumor samples. Filter the count matrix to retain only the samples present in clinical_data_clean for 'Tumor' tissue type.
 
 ```{r}
+
 clinical_data_clean <- clinical_data_clean |>
   select(where(~ sum(is.na(.)) <= 2/3*nrow(clinical_data_clean))) |>
   filter(tissue_type.samples == "Tumor")
 ```
 
-Filter the count matrix to retain only the samples present in clinical_data_clean for 'Tumor' tissue type.
-
 ```{r}
+
 count_data_clean <- count_data |>
   semi_join(clinical_data_clean, by = "sample")
 ```
@@ -117,11 +122,13 @@ count_data_clean <- count_data |>
 To minimize batch effects in our differential gene expression analysis (DESeq2), we selected only the samples from the International Genomics Consortium, the site with the highest sample count.
 
 ```{r}
+
 clinical_data_clean <- clinical_data_clean |> 
   filter(name.tissue_source_site == "International Genomics Consortium" )
 ```
 
 ```{r}
+
 count_data_clean <- count_data_clean |>
   semi_join(clinical_data_clean, by = "sample")
 ```
@@ -129,35 +136,65 @@ count_data_clean <- count_data_clean |>
 To perform differential gene expression analysis (DESeq2) based on patients' smoking habits, we removed rows (samples) with missing (NA) smoking information.
 
 ```{r}
-clinical_data_clean_DEseq <- clinical_data_clean |> 
-  filter(!is.na(pack_years_smoked.exposures))
 
-count_data_clean_DEseq <- count_data_clean |>
-  semi_join(clinical_data_clean_DEseq, by = "sample")
+clinical_data_clean_DESeq <- clinical_data_clean |> 
+  filter(!is.na(pack_years_smoked.exposures))
+```
+
+```{r}
+
+count_data_clean_DESeq <- count_data_clean |>
+  semi_join(clinical_data_clean_DESeq, by = "sample")
 ```
 
 Transpose the count data matrix to match DESeq2 format, with genes as rows and samples as columns.
 
 ```{r}
-count_data_clean_DEseq_trans <- count_data_clean_DEseq |>
-  pivot_longer(
-    cols = -sample, 
-    names_to = "gene", 
-    values_to = "count"
-    ) |>
-  pivot_wider(
-    names_from = sample, 
-    values_from = count
-    ) |>
-  column_to_rownames(var = "gene")
+
+count_data_clean_DESeq <- count_data_clean_DESeq |>
+  pivot_longer(cols = -sample, 
+               names_to = "gene", 
+               values_to = "count") |>
+  pivot_wider(names_from = sample, 
+              values_from = count)
 ```
 
-## Save the files into two separate tsv files in the data folder
+## Save the files into separate tsv files in the data folder
 
 ```{r}
-write_tsv(count_data_clean, here("data/02_count_data_clean.tsv"))
+
+write_tsv(count_data_clean, 
+          here("data/02_count_data_clean.tsv"))
 ```
 
 ```{r}
-write_tsv(clinical_data_clean, here("data/02_clinical_data_clean.tsv"))
+
+write_tsv(clinical_data_clean, 
+          here("data/02_clinical_data_clean.tsv"))
+```
+
+```{r}
+
+write_tsv(count_data_clean_DESeq, 
+          here("data/02_count_data_clean_DESeq.tsv"))
+```
+
+## Save RDS
+
+```{r}
+
+saveRDS(count_data_clean, 
+        file = here("presentation_data/02_count_data.rds"))
+```
+
+```{r}
+
+saveRDS(clinical_data_clean, 
+        file = here("presentation_data/02_clinical_data.rds"))
+```
+
+```{r}
+
+saveRDS(count_data_clean_DESeq, 
+          here("presentation_data/02_count_data_clean_DESeq.rds"))
 ```
