@@ -25,9 +25,9 @@ Tonya Walser, Xiaoyan Cui, Jane Yanagawa, Jay M. Lee, Eileen Heinrich, Gina Lee,
 
 
 # Load Data
-count_data <- readRDS("../R/01_count_data.rds") 
-clinical_data <- readRDS("../R/01_clinical_data.rds") 
-gene_ensembl <- readRDS("../R/01_gene_ensembl.rds")
+count_data <- readRDS("presentation_data/01_count_data.rds") 
+clinical_data <- readRDS("presentation_data/01_clinical_data.rds") 
+gene_ensembl <- readRDS("presentation_data/01_gene_ensembl.rds")
 
 # Subset the data to not load it all into the presentation
 count_data_subset <- count_data[1:15, 1:10]
