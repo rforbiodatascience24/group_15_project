@@ -156,8 +156,7 @@ count_data_clean_DESeq <- count_data_clean_DESeq |>
                names_to = "gene", 
                values_to = "count") |>
   pivot_wider(names_from = sample, 
-              values_from = count) |>
-  column_to_rownames(var = "gene")
+              values_from = count)
 ```
 
 ## Save the files into separate tsv files in the data folder

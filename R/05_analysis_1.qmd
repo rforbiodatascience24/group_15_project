@@ -33,16 +33,22 @@ Differential gene expression analysis will be conducted using the R package "DES
 
 ```{r}
 
+# Converting column named "gene" into row names (genes)
+
+count_data_clean_DESeq <- count_data_clean_DESeq |>
+  column_to_rownames(var = "gene")
+
 # Convert smoker_groups variable to a factor
 
 sample_table_DESeq <- sample_table_DESeq |>
-  mutate(smoker_groups = factor(smoker_groups))
+  mutate(smoker_groups = factor(smoker_groups, 
+                                levels = c("light", "medium", "heavy")))
 
 # Create a DESeq2 Dataset
 
 dds <- DESeqDataSetFromMatrix(
   countData = count_data_clean_DESeq, 
-  colData = sample_table_DEseq,
+  colData = sample_table_DESeq,
   design= ~ smoker_groups
 )
 
@@ -64,7 +70,8 @@ resultsNames(dds)
 # Extract result
 res <- results(
   dds, 
-  contrast = list(c("smoker_groups_heavy_vs_light", "smoker_groups_medium_vs_light")),
+  contrast = list(c("smoker_groups_heavy_vs_light", 
+                    "smoker_groups_medium_vs_light")),
   alpha=0.05)
 
 # Summerize results
@@ -137,14 +144,17 @@ normalized_counts <- counts(dds, normalized=TRUE)
 
 ```{r}
 
-normalized_counts_flipped <- as.data.frame(normalized_counts) |>
-  rownames_to_column("Gene") |>
+normalized_counts_flipped <- normalized_counts |>
+  as_tibble(rownames = "Gene") |>
   pivot_longer(cols = -Gene, 
                names_to = "Sample", 
                values_to = "Count") |>
   pivot_wider(names_from = "Gene", 
-              values_from = "Count") |>
-  column_to_rownames(var="Sample")
+              values_from = "Count")
+```
+
+```{r}
+class(normalized_counts_flipped)
 ```
 
 ### Step 5: Save Data
@@ -153,6 +163,15 @@ normalized_counts_flipped <- as.data.frame(normalized_counts) |>
 
 write.csv(normalized_counts, 
           here("data/05_normalized_counts.csv"))
+```
+
+```{r}
+
+write_tsv(normalized_counts_flipped, 
+          here("data/05_normalized_counts_flipped.tsv"))
+```
+
+```{r}
 
 write.csv(significant_genes, 
           here("data/05_significant_genes.csv"))
