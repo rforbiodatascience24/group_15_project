@@ -18,7 +18,7 @@ library("here")
 
 ```{r}
 
-count_data_augment = read_tsv(here("data/03_count_data_augment.tsv"),
+clinical_data_augment = read_tsv(here("data/03_clinical_data_augment.tsv"),
                          show_col_types = FALSE)
 ```
 
@@ -37,7 +37,7 @@ For the gender variable in our data set:
 # Count and calculate percentage by gender
 
 clinical_data_augment |> 
-  count(gender.demographic) |> 
+  dplyr::count(gender.demographic)|> 
   mutate(percentage = n * 100 / sum(n))  
 ```
 
@@ -50,7 +50,7 @@ The dataset is balanced in terms of gender, with nearly equal representation of 
 # Count and calculate percentage by race
 
 clinical_data_augment |> 
-  count(race.demographic) |> 
+  dplyr::count(race.demographic) |> 
   mutate(percentage = n * 100 / sum(n))
 ```
 
@@ -63,7 +63,7 @@ The dataset is unbalanced regarding race, with 89% of samples from white patient
 # Count and calculate percentage by pathologic stage
 
 clinical_data_augment |> 
-  count(ajcc_pathologic_stage.diagnoses) |>
+  dplyr::count(ajcc_pathologic_stage.diagnoses) |>
   mutate(percentage = n * 100 / sum(n))
 ```
 
@@ -94,7 +94,7 @@ Standard deviation: 9.5 years.
 # Count and calculate percentage by smoker groups
 
 clinical_data_augment |> 
-  count(smoker_groups) |>
+  dplyr::count(smoker_groups) |>
   mutate(percentage = n * 100 / sum(n))
 ```
 
@@ -123,7 +123,7 @@ As observed in the table above, the patients from the light smokers group have a
 # Count and calculate percentage of vital status within each gender
 
 clinical_data_augment |>
-  count(gender.demographic, vital_status.demographic) |>
+  dplyr::count(gender.demographic, vital_status.demographic) |>
   group_by(gender.demographic) |>
   mutate(percentage = n * 100 / sum(n)) |>
   ungroup()
@@ -138,7 +138,7 @@ The table shows that the majority of patients in the study are still alive. This
 # Count pathologic stages by gender in wide format
 
 clinical_data_augment |>
-  count(gender.demographic, ajcc_pathologic_stage.diagnoses) |>
+  dplyr::count(gender.demographic, ajcc_pathologic_stage.diagnoses) |>
   spread(ajcc_pathologic_stage.diagnoses, n, fill = 0)
 ```
 
