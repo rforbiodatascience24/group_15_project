@@ -20,6 +20,9 @@ library("here")
 
 clinical_data_augment = read_tsv(here("data/03_clinical_data_augment.tsv"),
                          show_col_types = FALSE)
+
+count_data_clean = read_tsv(here("data/02_count_data_clean.tsv"),
+                         show_col_types = FALSE)
 ```
 
 ## Clinical data
@@ -421,7 +424,6 @@ Histogram displaying the frequency of the genes across the samples
 ```{r}
 
 # Convert count data into long format
-
 gene_presence <- count_data_clean |>
   pivot_longer(cols = -1, # We exclude the first column (samples)
                names_to = "gene",

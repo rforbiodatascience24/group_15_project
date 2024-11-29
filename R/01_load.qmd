@@ -13,7 +13,6 @@ knitr:
 
 library("tidyverse")
 library("here")
-library("quarto")
 ```
 
 ## Loading files
@@ -23,7 +22,6 @@ In this project we are working with three input files: One with the counts data,
 Count data:
 
 ```{r}
-
 count_data = read_tsv(
   here("_raw/TCGA-LUAD.star_counts.tsv.gz"),
   show_col_types = FALSE)
@@ -41,7 +39,6 @@ clinical_data = read_tsv(
 Mapping of Ensembl and gene ids:
 
 ```{r}
-
 ensembl_to_gene_symbol = read_tsv(
   here("_raw/gencode.v36.annotation.gtf.gene.probemap"),
   show_col_types = FALSE)
@@ -51,7 +48,7 @@ ensembl_to_gene_symbol = read_tsv(
 
 We will create a data directory to store files and presentation objects:
 
-```{r setup, warning = FALSE , message=FALSE}
+```{r warning = FALSE , message=FALSE}
 
 dir.create(here("data"))
 dir.create(here("presentation_data"))
