@@ -15,6 +15,9 @@ Ona Saulianskaite (s232958) - saulianskaitee
 
 We declare that all of the project members have contributed equally to the project.
 
+## Presentation link:
+
+https://github.com/rforbiodatascience24/group_15_project/blob/main/doc/presentation.html 
 ## Introduction 
 
 This repository focuses on investigating how smoking habits and other phenotypic factors influence gene expression in the TCGA-GDC LUAD cohort. These preliminary insights contribute to a further understanding of the impact of smoking on lung adenocarcinoma. Advancing the research on lung cancer is key, since lung cancer is the leading cause of cancer-related death in the world. 
