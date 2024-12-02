@@ -5384,12 +5384,13 @@ AL627309.2
 </section>
 <section id="methods-deseq2" class="slide level2">
 <h2>Methods: DESeq2</h2>
-<p>DESeq2 performs these following steps to identify whether a gene is differentially expressed or not. So for each gene, DESeq2 seek to estimate:</p>
+<p>DESeq2 performs these following steps to identify whether a gene is differentially expressed or not:</p>
 <ul>
-<li>Estimate size factor</li>
-<li>Estimates dispersions</li>
-<li>Fits a linear model: from these model we get some values on which a statistical test is applied and we get a p value. Based on the p value we can identify whether a gene is differentially expressed or not.</li>
+<li>Estimate Size Factor</li>
+<li>Estimates Dispersion</li>
+<li>Fits a Generalized Linear Model: For each gene, DESeq fits a negative binomial distribution.</li>
 <li>Hypothesis testing</li>
+<li>Identify Differentially Expressed Genes: Genes are classified as expressed based on user defined thredhold for Log2FC and P-value</li>
 </ul>
 </section>
 <section id="deseq-results-volcano-plot" class="slide level2">

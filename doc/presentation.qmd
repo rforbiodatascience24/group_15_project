@@ -40,7 +40,16 @@ gene_ensembl_subset <- gene_ensembl[1:15,1:2]
 
 ## Materials
 
+
+
 ```{r, results='asis'}
+
+#Sources: https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html
+
+#https://bookdown.org/yihui/rmarkdown-cookbook/kable.html
+
+#https://bookdown.org/yihui/rmarkdown-cookbook/kableextra.html
+
 # Clinical Data Table
 cat("
 <div style='width: 100%; 
@@ -118,18 +127,11 @@ cat("</div></div>")
 
 ## Methods: Sample description
 
--   The data set comprises 53% females and 47% males, with an ethnicity distribution of 2% Asian, 8% Black or African, 1% Not Reported, and 89% White.
--   The median of age is 68.
+![](../results/04_samples_per_gender.png)
 
-::: row
-::: {.column width="50%"}
-![Smoker Group](../results/04_samples_per_smoker_group.png){width="100%"}
-:::
+## Methods: Sample description
 
-::: {.column width="50%"}
-![Gender](../results/04_samples_per_gender.png){width="100%"}
-:::
-:::
+<img src="../results/04_samples_per_smoker_group.png" alt="Sample description" style="width:80%; height:80%;">
 
 ## Methods: DESeq2
 
@@ -151,4 +153,8 @@ DESeq2 performs these following steps to identify whether a gene is differential
 
 ## Discussion
 
--   PCA Biplot shows that other biological variables, like gender, should've been accounted for in our DESeq analysis.
+- From the differential expression analysis, **DIRAS3, BNC1, AMBP, BARX1, and ASCL1** appear as strong candidates for further investigation. These genes have both significant fold changes and statistically robust p-values, making them ideal for prioritization in downstream analyses such as pathway enrichment or functional annotation.
+
+-   PCA Biplot shows that other biological variables, like gender, should have been accounted for in our modeling during the differential expression analysis.
+
+

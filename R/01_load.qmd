@@ -83,11 +83,11 @@ saveRDS(count_data,
 ```{r}
 
 saveRDS(clinical_data, 
-        file = here("presentation_data/01_clinical_data.rds"))
+        file = here("doc/presentation_data/01_clinical_data.rds"))
 ```
 
 ```{r}
 
 saveRDS(ensembl_to_gene_symbol, 
-        file = here("presentation_data/01_gene_ensembl.rds"))
+        file = here("doc/presentation_data/01_gene_ensembl.rds"))
 ```
