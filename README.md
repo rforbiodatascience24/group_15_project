@@ -5,7 +5,7 @@ Project Contributors:
 
 José Dinis Coelho da Silva Ferreira (s212484) - dinex1111
 
-Maria Gabriela Frascella (s231331) - s233113
+Maria Gabriela Frascella (s233113) - s233113
 
 Paula Gómez-Plana Rodríguez (s233165) - paula-gpr
 
@@ -23,6 +23,8 @@ This repository focuses on investigating how smoking habits and other phenotypic
 ## Data Availability 
 The data used is from the[ XenaBrowser from the University of California Santa Cruz]([url](https://xenabrowser.net/datapages/?cohort=GDC%20TCGA%20Lung%20Adenocarcinoma%20(LUAD)&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)) . The data consists of data from the GDC TCGA Lung Adenocarcinoma (LUAD) cohort. 
 The files were downloaded on the 18th of November 2024.
+
+The data needs to be downloaded from the sources below and uploaded into a _raw folder in the main directory of the project.
 
 In particular, we used: 
 
