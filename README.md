@@ -41,7 +41,7 @@ In particular, we used:
 
 The repository is organized as structured in the course 22160. Figure made by Leon E Jessen. 
 
-In order to run the qmd, the user needs to download the files specified in the Data AvailabilitSection,
+In order to run the qmd, the user needs to download the files specified in the Data Availability section.
 
 ## Dependencies
 This project makes use of the following packages:
