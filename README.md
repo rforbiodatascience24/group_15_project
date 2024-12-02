@@ -5,7 +5,7 @@ Project Contributors:
 
 José Dinis Coelho da Silva Ferreira (s212484) - dinex1111
 
-Maria Gabriela Frascella (s231331) - s233113
+Maria Gabriela Frascella (s233113) - s233113
 
 Paula Gómez-Plana Rodríguez (s233165) - paula-gpr
 
@@ -24,6 +24,8 @@ This repository focuses on investigating how smoking habits and other phenotypic
 The data used is from the[ XenaBrowser from the University of California Santa Cruz]([url](https://xenabrowser.net/datapages/?cohort=GDC%20TCGA%20Lung%20Adenocarcinoma%20(LUAD)&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)) . The data consists of data from the GDC TCGA Lung Adenocarcinoma (LUAD) cohort. 
 The files were downloaded on the 18th of November 2024.
 
+The data needs to be downloaded from the sources below and uploaded into a _raw folder in the main directory of the project.
+
 In particular, we used: 
 
 [STAR Counts Data]([url](https://xenabrowser.net/datapages/?dataset=TCGA-LUAD.star_counts.tsv&host=https%3A%2F%2Fgdc.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443)): Log-transformed count matrix containing the counts for the genes tagged by Ensembl IDs. We started the analysis with a total of 589 samples from the cohort. The downloaded version was 05-10-2024. https://xenabrowser.net/datapages/?dataset=TCGA-LUAD.star_counts.tsv&host=https%3A%2F%2Fgdc.xenahubs.net&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443
@@ -39,7 +41,7 @@ In particular, we used:
 
 The repository is organized as structured in the course 22160. Figure made by Leon E Jessen. 
 
-In order to run the qmd, the user needs to download the files specified in the Data AvailabilitSection,
+In order to run the qmd, the user needs to download the files specified in the Data Availability section.
 
 ## Dependencies
 This project makes use of the following packages:
