@@ -40,8 +40,6 @@ gene_ensembl_subset <- gene_ensembl[1:15,1:2]
 
 ## Materials
 
-
-
 ```{r, results='asis'}
 
 #Sources: https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html
@@ -123,15 +121,15 @@ cat("</div></div>")
 
 ## Methods: Workflow
 
-![](photos/diagram.jpg){width="100%"}
+![](photos/workflow.png){width="100%"}
 
 ## Methods: Sample description
 
-![](../results/04_samples_per_gender.png)
+<img src="../results/04_samples_per_gender_race.png" alt="Sample description" style="width:80%; height:80%;"/>
 
 ## Methods: Sample description
 
-<img src="../results/04_samples_per_smoker_group.png" alt="Sample description" style="width:80%; height:80%;">
+<img src="../results/04_samples_per_smoker_group.png" alt="Sample description" style="width:80%; height:80%;"/>
 
 ## Methods: DESeq2
 
@@ -153,8 +151,6 @@ DESeq2 performs these following steps to identify whether a gene is differential
 
 ## Discussion
 
-- From the differential expression analysis, **DIRAS3, BNC1, AMBP, BARX1, and ASCL1** appear as strong candidates for further investigation. These genes have both significant fold changes and statistically robust p-values, making them ideal for prioritization in downstream analyses such as pathway enrichment or functional annotation.
+-   From the differential expression analysis, **DIRAS3, BNC1, AMBP, BARX1, and ASCL1** appear as strong candidates for further investigation. These genes have both significant fold changes and statistically robust p-values, making them ideal for prioritization in downstream analyses such as pathway enrichment or functional annotation.
 
 -   PCA Biplot shows that other biological variables, like gender, should have been accounted for in our modeling during the differential expression analysis.
-
-

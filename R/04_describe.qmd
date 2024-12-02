@@ -164,6 +164,11 @@ dir.create(here("results"))
 # Plotting samples per smoker group
 
 clinical_data_augment |>
+  mutate(smoker_groups = factor(smoker_groups,
+                                levels =  c("No information",
+                                            "light",
+                                            "medium",
+                                            "heavy"))) |>
   ggplot(mapping = aes(x = smoker_groups, 
                        fill = smoker_groups)) +
   geom_bar() +
@@ -187,17 +192,17 @@ Here we have a bar chart showing the count of samples grouped by smoking history
 
 clinical_data_augment |>
   ggplot(mapping = aes(x = gender.demographic, 
-                       fill = gender.demographic)) +
+                       fill = race.demographic)) +
   geom_bar() +
   labs(x = "Gender",
        y = "Count of samples(n)",
-       title = "Samples per gender",
-       fill = "Gender")
+       title = "Samples per gender and race",
+       fill = "Race")
 ```
 
 ```{r}
 
-ggsave(here("results/04_samples_per_gender.png"), plot = last_plot() )
+ggsave(here("results/04_samples_per_gender_race.png"), plot = last_plot() )
 ```
 
 This is a bar chart displaying the count of samples categorized by gender relatively balanced, with almost an equal number of samples for males and females.
