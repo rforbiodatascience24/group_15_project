@@ -159,6 +159,18 @@ count_data_clean_DESeq <- count_data_clean_DESeq |>
               values_from = count)
 ```
 
+We need a gene_presence variable to be able to generate a gene_presence plot
+
+```{r}
+gene_presence <- count_data_clean |>
+  pivot_longer(cols = -1,
+               names_to = "gene",
+               values_to = "count") |>
+  filter(count > 0) |>
+  group_by(gene) |>
+  summarize(samples_present = n(), .groups = "drop")
+```
+
 ## Save the files into separate tsv files in the data folder
 
 ```{r}
@@ -174,9 +186,13 @@ write_tsv(clinical_data_clean,
 ```
 
 ```{r}
-
 write_tsv(count_data_clean_DESeq, 
           here("data/02_count_data_clean_DESeq.tsv"))
+```
+
+```{r}
+write_tsv(gene_presence, 
+          here("data/02_gene_presence.tsv"))
 ```
 
 ## Save RDS

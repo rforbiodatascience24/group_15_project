@@ -223,6 +223,8 @@ low counts [2]     : 25041, 48%
 <section id="step-3-plotting-the-significant-updown-regulated-genes." class="level3">
 <h3 class="anchored" data-anchor-id="step-3-plotting-the-significant-updown-regulated-genes.">Step 3: Plotting the significant up/down regulated genes.</h3>
 <p>Create a volcano plot to visualize the distribution of significant genes.</p>
+<p>As we can see in the plot most genes are not significantly differentially expressed, clustering near log2FC = 0 and with low significance, adjusted p-value &gt; 0.05.</p>
+<p>Labeled genes: DIRAS3, BNC1, AMBP, BARX1, ASCL1 are likely candidates for further biological investigation. They have both large fold changes and significant p-values.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AMBP"</span>, <span class="st">"ASCL1"</span>, <span class="st">"BARX1"</span>, <span class="st">"DIRAS3"</span>, <span class="st">"BNC1"</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -315,8 +317,7 @@ low counts [2]     : 25041, 48%
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>          <span class="fu">here</span>(<span class="st">"data/05_normalized_counts_flipped.tsv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(significant_genes, </span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>          <span class="fu">here</span>(<span class="st">"data/05_significant_genes.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(significant_genes, <span class="fu">here</span>(<span class="st">"data/05_significant_genes.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>

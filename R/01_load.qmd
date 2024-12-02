@@ -48,7 +48,7 @@ ensembl_to_gene_symbol = read_tsv(
 
 We will create a data directory to store files and presentation objects:
 
-```{r warning = FALSE , message=FALSE}
+```{r}
 
 dir.create(here("data"))
 ```
@@ -76,7 +76,7 @@ write_tsv(ensembl_to_gene_symbol,
 ```{r}
 
 saveRDS(count_data,
-        file = here("presentation_data/01_count_data.rds"))
+        file = here("doc/presentation_data/01_count_data.rds"))
 ```
 
 ```{r}

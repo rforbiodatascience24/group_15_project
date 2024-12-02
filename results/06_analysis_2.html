@@ -170,9 +170,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">here</span>(<span class="st">"results/06_pca_biplot_gender.png"</span>),</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">plot=</span> <span class="fu">last_plot</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pca_plotting</span>(<span class="st">"race.demographic"</span>, <span class="at">PCAtitle =</span> <span class="st">"PCA Plot of Samples Colored by Race"</span>, <span class="at">Legendname =</span> <span class="st">"Race"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pca_plotting</span>(<span class="st">"race.demographic"</span>, <span class="at">PCAtitle =</span> <span class="st">"PCA Plot of Samples Colored by Race"</span>, <span class="at">Legendname =</span> <span class="st">"Race"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -182,7 +187,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pca_plotting</span>(<span class="st">"ajcc_pathologic_stage.diagnoses"</span>, <span class="at">PCAtitle =</span> <span class="st">"PCA Plot of Samples Colored by Stage of Cancer"</span>, <span class="at">Legendname =</span> <span class="st">"Stage of Cancer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pca_plotting</span>(<span class="st">"ajcc_pathologic_stage.diagnoses"</span>, <span class="at">PCAtitle =</span> <span class="st">"PCA Plot of Samples Colored by Stage of Cancer"</span>, <span class="at">Legendname =</span> <span class="st">"Stage of Cancer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -192,7 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pca_plotting</span>(<span class="st">"ajcc_pathologic_m.diagnoses"</span>, <span class="at">PCAtitle =</span> <span class="st">"PCA Plot of Samples Colored by Metastasis Stage of Cancer"</span>, <span class="at">Legendname =</span> <span class="st">"Metastasis Stage of Cancer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pca_plotting</span>(<span class="st">"ajcc_pathologic_m.diagnoses"</span>, <span class="at">PCAtitle =</span> <span class="st">"PCA Plot of Samples Colored by Metastasis Stage of Cancer"</span>, <span class="at">Legendname =</span> <span class="st">"Metastasis Stage of Cancer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

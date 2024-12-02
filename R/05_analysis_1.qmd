@@ -94,7 +94,7 @@ Create a volcano plot to visualize the distribution of significant genes.
 
 As we can see in the plot most genes are not significantly differentially expressed, clustering near log2FC = 0 and with low significance, adjusted p-value \> 0.05.
 
-Labeled genes: DIRAS3, BNC1, AMBP, BARX1, ASCL1 are likely  candidates for further biological investigation. They have both large fold changes and significant p-values.
+Labeled genes: DIRAS3, BNC1, AMBP, BARX1, ASCL1 are likely candidates for further biological investigation. They have both large fold changes and significant p-values.
 
 ```{r}
 

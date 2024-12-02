@@ -20,6 +20,7 @@ quarto_render(input = "02_clean.qmd")
 file.rename("02_clean.html","../results/02_clean.html")
 file.rename("02_clean_files", file.path("../results", "02_clean_files"))
 
+
 quarto_render(input = "03_augment.qmd")
 file.rename("03_augment.html","../results/03_augment.html")
 file.rename("03_augment_files", file.path("../results", "03_augment_files"))
@@ -36,10 +37,4 @@ file.rename("05_analysis_1_files", file.path("../results", "05_analysis_1_files"
 quarto_render(input = "06_analysis_2.qmd")
 file.rename("06_analysis_2.html","../results/06_analysis_2.html")
 file.rename("06_analysis_2_files", file.path("../results", "06_analysis_2_files"))
-
-
-```
-
-```{r}
-quarto_render(input = "06_analysis_2.qmd")
 ```
