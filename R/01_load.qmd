@@ -51,7 +51,6 @@ We will create a data directory to store files and presentation objects:
 ```{r warning = FALSE , message=FALSE}
 
 dir.create(here("data"))
-dir.create(here("presentation_data"))
 ```
 
 ```{r}
